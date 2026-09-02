@@ -149,45 +149,40 @@ prints the best parameter vector in the order shown above.
 
 ## Classical, SR, and Automodel results
 
-The score is the average of normalized density and velocity squared errors:
+The table uses relative L2 errors for density and velocity on the training
+(`tr`) and test (`ts`) partitions. Lower is better. Each parenthesized value is
+the model's rank for that metric across all 15 rows, and `Avg Rank` is the mean
+of its four ranks. Ranks are computed from the displayed three-decimal values;
+ties therefore share the corresponding average rank.
 
-```text
-E_rho  = 100 * sum((rho_model - rho_data)^2) / sum(rho_data^2)
-E_v    = 100 * sum((v_model - v_data)^2) / sum(v_data^2)
-E_data = 0.5 * (E_rho + E_v)
-```
-
-Lower is better. The table reports unpenalized `E_data` on the training and
-held-out chronological test intervals. Classical and Automodel values come from
-this checkout. The SR values were reproduced with the official
+Classical and Automodel values come from this checkout. The SR values were
+reproduced with the official
 [`cpml-au/SR-Traffic`](https://github.com/cpml-au/SR-Traffic) results script at
 commit `3bf285ab1d6b2b61f0c0f27c0d80e42633b84ac4`; those models are benchmarks and
-are not bundled here. Bold test scores identify the best result in each baseline
-family.
+are not bundled here. Bold entries mark the best value in each metric and the
+best overall average rank.
 
-| Baseline family | Model | Source | Training `E_data` | Test `E_data` |
-|---|---|---|---:|---:|
-| Greenshields | Greenshields | Classical baseline | 8.166908 | 9.230426 |
-| Greenshields | SR-Greenshields | Upstream SR | 7.464482 | 8.602553 |
-| Greenshields | automodel-Greenshields | Automodel | 5.821048 | **7.091936** |
-| IDM | IDM | Classical baseline | 7.319251 | 6.957441 |
-| IDM | SR-IDM | Upstream SR | 6.597450 | **6.225629** |
-| IDM | automodel-IDM | Automodel | 6.368446 | 7.117303 |
-| Weidmann | Weidmann | Classical baseline | 6.858360 | 7.651073 |
-| Weidmann | SR-Weidmann | Upstream SR | 5.957339 | **6.860641** |
-| Weidmann | automodel-Weidmann | Automodel | 6.713568 | 7.458993 |
-| Triangular | Triangular | Classical baseline | 7.988255 | 7.918859 |
-| Triangular | SR-Triangular | Upstream SR | 7.229762 | **6.727777** |
-| Triangular | automodel-Triangular | Automodel | 6.673826 | 7.118426 |
-| Del Castillo | Del Castillo | Classical baseline | 6.824368 | 7.196903 |
-| Del Castillo | SR-Del Castillo | Upstream SR | 6.098916 | 6.800595 |
-| Del Castillo | automodel-Del Castillo | Automodel | 5.811699 | **6.779614** |
+| Model | $E^{\mathrm{tr}}_\rho$ | $E^{\mathrm{tr}}_v$ | $E^{\mathrm{ts}}_\rho$ | $E^{\mathrm{ts}}_v$ | Avg Rank |
+|---|---:|---:|---:|---:|---:|
+| Greenshields | 0.299 (15) | 0.256 (10) | 0.289 (15) | 0.304 (15) | 13.75 |
+| SR-Greenshields | 0.296 (14) | 0.234 (5) | 0.287 (14) | 0.285 (13.5) | 11.62 |
+| automodel-Greenshields | 0.251 (7) | **0.218 (1)** | 0.250 (5.5) | 0.269 (8) | 5.38 |
+| IDM | 0.252 (9) | 0.275 (14) | 0.253 (10) | 0.262 (5) | 9.50 |
+| SR-IDM | 0.243 (2) | 0.257 (11) | 0.241 (2) | **0.246 (1)** | 4.00 |
+| automodel-IDM | **0.241 (1)** | 0.251 (9) | 0.252 (8.5) | 0.269 (8) | 6.62 |
+| Weidmann | 0.264 (12) | 0.246 (7) | 0.260 (11.5) | 0.279 (12) | 10.62 |
+| SR-Weidmann | 0.249 (4.5) | 0.226 (3) | 0.250 (5.5) | 0.261 (4) | 4.25 |
+| automodel-Weidmann | 0.264 (12) | 0.241 (6) | 0.260 (11.5) | 0.273 (11) | 10.12 |
+| Triangular | 0.264 (12) | 0.286 (15) | 0.264 (13) | 0.285 (13.5) | 13.38 |
+| SR-Triangular | 0.251 (7) | 0.272 (13) | 0.248 (3) | 0.258 (2) | 6.25 |
+| automodel-Triangular | 0.244 (3) | 0.259 (12) | 0.251 (7) | 0.269 (8) | 7.50 |
+| Del Castillo | 0.262 (10) | 0.247 (8) | 0.252 (8.5) | 0.271 (10) | 9.12 |
+| SR-Del Castillo | 0.251 (7) | 0.230 (4) | **0.240 (1)** | 0.268 (6) | 4.50 |
+| automodel-Del Castillo | 0.249 (4.5) | 0.221 (2) | 0.249 (4) | 0.259 (3) | **3.38** |
 
-Automodel is best for Greenshields and Del Castillo and improves four of the
-five classical baselines. The SR benchmark is best for IDM, Weidmann, and
-Triangular. Del Castillo has the lowest Automodel test score, while the IDM
-correction is the only Automodel result that is worse than its classical
-baseline.
+Automodel-Del Castillo has the best average rank across the four error metrics.
+The Automodel models achieve the lowest training density and velocity errors,
+while the SR benchmarks achieve the lowest test density and velocity errors.
 
 The SR benchmark and this checkout use the same chronological I80 task and score
 definition, but they were executed from different commits. The comparison is
