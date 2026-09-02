@@ -1,0 +1,82 @@
+{
+  "baseline_key": "triangular",
+  "baseline": "Triangular",
+  "frozen_source": "meta_5/agent_2/attempt_1/model.py",
+  "expression": "exp(a*rho*(conv_3(rho,ones)-3*conv_1(rho,ones)))",
+  "tree_nodes": 16,
+  "parameter_names": [
+    "density_contrast"
+  ],
+  "selection_parameters": [
+    -921.9701997917449
+  ],
+  "refit_parameters": [
+    -921.972502729021
+  ],
+  "bounds": [
+    [
+      -3000.0,
+      3000.0
+    ]
+  ],
+  "optimizer": {
+    "name": "scipy.optimize.minimize/Powell on scaled [-1,1] parameters",
+    "starts": 2,
+    "max_evaluations_per_start": 180,
+    "objective_evaluations": 22,
+    "selected_from": "powell",
+    "selected_objective": 6.750185260065466,
+    "runs": [
+      {
+        "success": true,
+        "message": "Optimization terminated successfully.",
+        "fun": 6.750185260065466,
+        "nfev": 18,
+        "unit_parameters": [
+          -0.3073241675763403
+        ]
+      },
+      {
+        "success": true,
+        "message": "Optimization terminated successfully.",
+        "fun": 6.750185260065466,
+        "nfev": 36,
+        "unit_parameters": [
+          -0.3073241675763403
+        ]
+      }
+    ]
+  },
+  "feasible": true,
+  "train_validation": {
+    "baseline": "Triangular",
+    "split": "train_validation",
+    "expression": "exp(a*rho*(conv_3(rho,ones)-3*conv_1(rho,ones)))",
+    "parameters": [
+      -921.972502729021
+    ],
+    "rho_error": 6.190984778559129,
+    "velocity_error": 7.309385741571802,
+    "data_error": 6.750185260065466,
+    "runtime_seconds": 0.5334160009988409,
+    "peak_rss_mb": 801.5859375,
+    "finite": true
+  },
+  "test": {
+    "baseline": "Triangular",
+    "split": "test",
+    "expression": "exp(a*rho*(conv_3(rho,ones)-3*conv_1(rho,ones)))",
+    "parameters": [
+      -921.972502729021
+    ],
+    "rho_error": 6.5470678859656575,
+    "velocity_error": 7.689783461630674,
+    "data_error": 7.118425673798166,
+    "runtime_seconds": 0.9775282959999458,
+    "peak_rss_mb": 831.14453125,
+    "finite": true
+  },
+  "test_evaluation_count": 1,
+  "total_runtime_seconds": 14.314552869998806,
+  "peak_rss_mb": 831.14453125
+}

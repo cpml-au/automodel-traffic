@@ -1,0 +1,303 @@
+{
+  "attempt": 1,
+  "candidate": {
+    "expression": "exp(c0)",
+    "tree_nodes": 2,
+    "parameter_names": [
+      "c0"
+    ]
+  },
+  "fit_protocol": {
+    "dataset": "I80",
+    "problem": "prediction",
+    "training_split": "full train (times 0-63)",
+    "evaluation_split": "full validation (times 64-107)",
+    "test_evaluated": false,
+    "optimizer": "scipy.optimize.minimize/Powell",
+    "restarts": 2,
+    "max_evaluations_per_restart": 45,
+    "parameter_bounds": [
+      [
+        -1.0,
+        1.0
+      ]
+    ],
+    "seed_formula": "4110 + baseline_index",
+    "baseline_order": [
+      "greenshields",
+      "idm",
+      "weidmann",
+      "triangular",
+      "del_castillo"
+    ],
+    "device": "CPU",
+    "pythonpath": "current checkout: <repo>/src:<repo>"
+  },
+  "records": [
+    {
+      "baseline_key": "greenshields",
+      "baseline": "Greenshields",
+      "status": "completed",
+      "fit": {
+        "expression": "exp(c0)",
+        "tree_nodes": 2,
+        "parameter_names": [
+          "c0"
+        ],
+        "parameters": [
+          0.022635381205907117
+        ],
+        "train": {
+          "baseline": "Greenshields",
+          "split": "train",
+          "expression": "exp(c0)",
+          "parameters": [
+            0.022635381205907117
+          ],
+          "rho_error": 7.776723384857178,
+          "velocity_error": 6.578375816345215,
+          "data_error": 7.177549362182617,
+          "runtime_seconds": 0.11849506299950008,
+          "peak_rss_mb": 819.77734375,
+          "finite": true
+        },
+        "validation": {
+          "baseline": "Greenshields",
+          "split": "validation",
+          "expression": "exp(c0)",
+          "parameters": [
+            0.022635381205907117
+          ],
+          "rho_error": 11.638790130615234,
+          "velocity_error": 7.659224033355713,
+          "data_error": 9.649006843566895,
+          "runtime_seconds": 0.3473917640003492,
+          "peak_rss_mb": 830.171875,
+          "finite": true
+        },
+        "validation_fitness": 9.669006843566894,
+        "feasible": true,
+        "optimizer_success": false,
+        "optimizer_message": "Maximum number of function evaluations has been exceeded.",
+        "optimizer_evaluations": 67,
+        "restarts": 2,
+        "seed": 4110,
+        "fit_runtime_seconds": 9.782471763000103
+      },
+      "test_evaluated": false
+    },
+    {
+      "baseline_key": "idm",
+      "baseline": "IDM",
+      "status": "completed",
+      "fit": {
+        "expression": "exp(c0)",
+        "tree_nodes": 2,
+        "parameter_names": [
+          "c0"
+        ],
+        "parameters": [
+          -0.18839327236131206
+        ],
+        "train": {
+          "baseline": "IDM",
+          "split": "train",
+          "expression": "exp(c0)",
+          "parameters": [
+            -0.18839327236131206
+          ],
+          "rho_error": 7.256054401397705,
+          "velocity_error": 6.095198631286621,
+          "data_error": 6.675626754760742,
+          "runtime_seconds": 0.51692624000043,
+          "peak_rss_mb": 1436.515625,
+          "finite": true
+        },
+        "validation": {
+          "baseline": "IDM",
+          "split": "validation",
+          "expression": "exp(c0)",
+          "parameters": [
+            -0.18839327236131206
+          ],
+          "rho_error": 6.279279708862305,
+          "velocity_error": 6.138361930847168,
+          "data_error": 6.208820819854736,
+          "runtime_seconds": 0.7157101579996379,
+          "peak_rss_mb": 1444.1875,
+          "finite": true
+        },
+        "validation_fitness": 6.228820819854736,
+        "feasible": true,
+        "optimizer_success": false,
+        "optimizer_message": "Maximum number of function evaluations has been exceeded.",
+        "optimizer_evaluations": 90,
+        "restarts": 2,
+        "seed": 4111,
+        "fit_runtime_seconds": 51.66681444799997
+      },
+      "test_evaluated": false
+    },
+    {
+      "baseline_key": "weidmann",
+      "baseline": "Weidmann",
+      "status": "completed",
+      "fit": {
+        "expression": "exp(c0)",
+        "tree_nodes": 2,
+        "parameter_names": [
+          "c0"
+        ],
+        "parameters": [
+          -0.019717392125788224
+        ],
+        "train": {
+          "baseline": "Weidmann",
+          "split": "train",
+          "expression": "exp(c0)",
+          "parameters": [
+            -0.019717392125788224
+          ],
+          "rho_error": 8.341577529907227,
+          "velocity_error": 6.088132381439209,
+          "data_error": 7.214855194091797,
+          "runtime_seconds": 0.1484933989995625,
+          "peak_rss_mb": 1630.51171875,
+          "finite": true
+        },
+        "validation": {
+          "baseline": "Weidmann",
+          "split": "validation",
+          "expression": "exp(c0)",
+          "parameters": [
+            -0.019717392125788224
+          ],
+          "rho_error": 5.790348529815674,
+          "velocity_error": 7.430845260620117,
+          "data_error": 6.610596656799316,
+          "runtime_seconds": 0.15027556600034586,
+          "peak_rss_mb": 1641.08984375,
+          "finite": true
+        },
+        "validation_fitness": 6.630596656799316,
+        "feasible": true,
+        "optimizer_success": true,
+        "optimizer_message": "Optimization terminated successfully.",
+        "optimizer_evaluations": 64,
+        "restarts": 2,
+        "seed": 4112,
+        "fit_runtime_seconds": 9.878837475000182
+      },
+      "test_evaluated": false
+    },
+    {
+      "baseline_key": "triangular",
+      "baseline": "Triangular",
+      "status": "completed",
+      "fit": {
+        "expression": "exp(c0)",
+        "tree_nodes": 2,
+        "parameter_names": [
+          "c0"
+        ],
+        "parameters": [
+          -0.09737332019255536
+        ],
+        "train": {
+          "baseline": "Triangular",
+          "split": "train",
+          "expression": "exp(c0)",
+          "parameters": [
+            -0.09737332019255536
+          ],
+          "rho_error": 7.776231288909912,
+          "velocity_error": 9.697796821594238,
+          "data_error": 8.737013816833496,
+          "runtime_seconds": 0.14042450999932043,
+          "peak_rss_mb": 1831.0390625,
+          "finite": true
+        },
+        "validation": {
+          "baseline": "Triangular",
+          "split": "validation",
+          "expression": "exp(c0)",
+          "parameters": [
+            -0.09737332019255536
+          ],
+          "rho_error": 6.599503993988037,
+          "velocity_error": 8.417008399963379,
+          "data_error": 7.508255958557129,
+          "runtime_seconds": 0.15525476599941612,
+          "peak_rss_mb": 1838.55078125,
+          "finite": true
+        },
+        "validation_fitness": 7.5282559585571285,
+        "feasible": true,
+        "optimizer_success": true,
+        "optimizer_message": "Optimization terminated successfully.",
+        "optimizer_evaluations": 73,
+        "restarts": 2,
+        "seed": 4113,
+        "fit_runtime_seconds": 11.656411959000252
+      },
+      "test_evaluated": false
+    },
+    {
+      "baseline_key": "del_castillo",
+      "baseline": "Del Castillo",
+      "status": "completed",
+      "fit": {
+        "expression": "exp(c0)",
+        "tree_nodes": 2,
+        "parameter_names": [
+          "c0"
+        ],
+        "parameters": [
+          0.0054952026563039776
+        ],
+        "train": {
+          "baseline": "Del Castillo",
+          "split": "train",
+          "expression": "exp(c0)",
+          "parameters": [
+            0.0054952026563039776
+          ],
+          "rho_error": 7.3842997550964355,
+          "velocity_error": 6.710896968841553,
+          "data_error": 7.047598361968994,
+          "runtime_seconds": 0.21239646800040646,
+          "peak_rss_mb": 2051.05078125,
+          "finite": true
+        },
+        "validation": {
+          "baseline": "Del Castillo",
+          "split": "validation",
+          "expression": "exp(c0)",
+          "parameters": [
+            0.0054952026563039776
+          ],
+          "rho_error": 6.8029465675354,
+          "velocity_error": 6.364965438842773,
+          "data_error": 6.583955764770508,
+          "runtime_seconds": 0.20530688399958308,
+          "peak_rss_mb": 2053.17578125,
+          "finite": true
+        },
+        "validation_fitness": 6.603955764770507,
+        "feasible": true,
+        "optimizer_success": true,
+        "optimizer_message": "Optimization terminated successfully.",
+        "optimizer_evaluations": 56,
+        "restarts": 2,
+        "seed": 4114,
+        "fit_runtime_seconds": 12.815544453999792
+      },
+      "test_evaluated": false
+    }
+  ],
+  "attempt_runtime_seconds": 95.81407063999995,
+  "attempt_peak_rss_mb": 2053.17578125,
+  "completed_baselines": 5,
+  "failed_baselines": 0,
+  "test_evaluated": false
+}

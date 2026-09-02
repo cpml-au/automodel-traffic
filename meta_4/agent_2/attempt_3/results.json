@@ -1,0 +1,542 @@
+{
+  "meta_iteration": 4,
+  "agent": 2,
+  "attempt": 3,
+  "candidate": {
+    "symbolic_factor": "exp(a*(conv_3-3*conv_1)+b*hquad)",
+    "typed_gp_factor": "ExpP0(AddCP0(MFP0(SubCP0(conv_3P0(rho,ones),MFP0(conv_1P0(rho,ones),three)),a),MFP0(St_oneD1(SquareD1(St_oneP0(rho))),b)))",
+    "typed_gp_factor_nodes": 19,
+    "attachment_node": "CMulP0",
+    "added_nodes_including_attachment": 20,
+    "tree_node_counting": "fixed incumbent nodes + CMulP0 attachment + complete typed factor; repeated convolution subtrees counted separately",
+    "incumbent_nodes": {
+      "greenshields": 25,
+      "idm": 14,
+      "weidmann": 10,
+      "triangular": 1,
+      "del_castillo": 21
+    },
+    "total_nodes_by_baseline": {
+      "greenshields": 45,
+      "idm": 34,
+      "weidmann": 30,
+      "triangular": 21,
+      "del_castillo": 41
+    },
+    "incumbent_coefficients_fixed": true,
+    "hodge_primitives_used": [
+      "St_oneP0",
+      "St_oneD1"
+    ],
+    "hodge_primitives_registered": [
+      "St_oneP0",
+      "St_oneP1",
+      "St_oneD0",
+      "St_oneD1"
+    ],
+    "implementation": [
+      "dctkit.dec.cochain.star",
+      "dctkit.dec.cochain.cochain_mul",
+      "dctkit.dec.cochain.convolution"
+    ],
+    "nonlocal": true
+  },
+  "fit_protocol": {
+    "dataset": "I80",
+    "problem": "prediction",
+    "training_split": "full train times 0-63 (4,800 rows)",
+    "evaluation_split": "full validation times 64-107 (3,300 rows)",
+    "test_evaluated": false,
+    "optimizer": "scipy.optimize.minimize/Powell via fit_candidate",
+    "objective": "full training E_data",
+    "restarts": 2,
+    "max_evaluations_per_restart": 60,
+    "parameter_bounds": [
+      [
+        -300.0,
+        300.0
+      ],
+      [
+        -2500.0,
+        2500.0
+      ]
+    ],
+    "seed_formula": "11130 + baseline_index",
+    "baseline_order": [
+      "greenshields",
+      "idm",
+      "weidmann",
+      "triangular",
+      "del_castillo"
+    ],
+    "feasibility_check": "automodel.search_utils.is_nonlocal_feasible",
+    "wave_speed_bound": "row-wise sum(abs(full flux Jacobian)); includes all off-diagonal Hodge/convolution coupling",
+    "fitness": "validation E_data + 0.01*total_tree_nodes"
+  },
+  "records": [
+    {
+      "baseline_key": "greenshields",
+      "baseline": "Greenshields",
+      "status": "completed",
+      "fit": {
+        "expression": "(exp(0.0231229711605-0.0883173972597*rho-0.15008122102*rho^2)*exp(-293.458109123*(conv_3-3*conv_1)))*exp(a*(conv_3-3*conv_1)+b*hquad)",
+        "tree_nodes": 45,
+        "parameter_names": [
+          "a",
+          "b"
+        ],
+        "parameters": [
+          -6.362556798102317,
+          26.72142448785925
+        ],
+        "train": {
+          "baseline": "Greenshields",
+          "split": "train",
+          "expression": "(exp(0.0231229711605-0.0883173972597*rho-0.15008122102*rho^2)*exp(-293.458109123*(conv_3-3*conv_1)))*exp(a*(conv_3-3*conv_1)+b*hquad)",
+          "parameters": [
+            -6.362556798102317,
+            26.72142448785925
+          ],
+          "rho_error": 7.696021556854248,
+          "velocity_error": 4.853293418884277,
+          "data_error": 6.274657249450684,
+          "runtime_seconds": 0.34788671800015436,
+          "peak_rss_mb": 1247.78515625,
+          "finite": true
+        },
+        "validation": {
+          "baseline": "Greenshields",
+          "split": "validation",
+          "expression": "(exp(0.0231229711605-0.0883173972597*rho-0.15008122102*rho^2)*exp(-293.458109123*(conv_3-3*conv_1)))*exp(a*(conv_3-3*conv_1)+b*hquad)",
+          "parameters": [
+            -6.362556798102317,
+            26.72142448785925
+          ],
+          "rho_error": 10.712699890136719,
+          "velocity_error": 5.068593502044678,
+          "data_error": 7.890646934509277,
+          "runtime_seconds": 0.6254742330002045,
+          "peak_rss_mb": 1263.69140625,
+          "finite": true
+        },
+        "validation_fitness": 8.340646934509277,
+        "feasible": true,
+        "optimizer_success": false,
+        "optimizer_message": "Maximum number of function evaluations has been exceeded.",
+        "optimizer_evaluations": 119,
+        "restarts": 2,
+        "seed": 11130,
+        "fit_runtime_seconds": 56.99047544299901
+      },
+      "meta3_fitness": 6.953732490539551,
+      "fitness_change_from_meta3": 1.3869144439697259,
+      "diagnostics": {
+        "homogeneous_feasibility": {
+          "method": "64 homogeneous fields; central node constitutive audit",
+          "samples": 64,
+          "physical_density_domain": [
+            0.000874923774972558,
+            0.55995123
+          ],
+          "finite_multiplier_and_velocity": true,
+          "positive_multiplier_all_nodes": true,
+          "nonnegative_central_corrected_velocity": true,
+          "nonincreasing_central_corrected_velocity": true,
+          "minimum_multiplier_all_nodes": 0.11701115220785141,
+          "maximum_multiplier_all_nodes": 606.706787109375,
+          "minimum_center_multiplier": 1.012843370437622,
+          "maximum_center_multiplier": 1.0332071781158447,
+          "minimum_corrected_velocity": 0.0,
+          "maximum_velocity_forward_difference": -0.008717596530914307,
+          "tolerance": 1e-07,
+          "passed": true
+        },
+        "wave_speed_bound": "row-wise sum(abs(full flux Jacobian)); includes all off-diagonal Hodge/convolution coupling",
+        "simulation_finite_train": true,
+        "simulation_finite_validation": true,
+        "hodge_primitives_registered": [
+          "St_oneP0",
+          "St_oneP1",
+          "St_oneD0",
+          "St_oneD1"
+        ]
+      },
+      "nonlocal": true,
+      "test_evaluated": false
+    },
+    {
+      "baseline_key": "idm",
+      "baseline": "IDM",
+      "status": "completed",
+      "fit": {
+        "expression": "(exp(-46.9914359751*(conv_3-3*conv_1)))*exp(a*(conv_3-3*conv_1)+b*hquad)",
+        "tree_nodes": 34,
+        "parameter_names": [
+          "a",
+          "b"
+        ],
+        "parameters": [
+          0.09895592914925624,
+          -45.27079702626104
+        ],
+        "train": {
+          "baseline": "IDM",
+          "split": "train",
+          "expression": "(exp(-46.9914359751*(conv_3-3*conv_1)))*exp(a*(conv_3-3*conv_1)+b*hquad)",
+          "parameters": [
+            0.09895592914925624,
+            -45.27079702626104
+          ],
+          "rho_error": 6.891513824462891,
+          "velocity_error": 7.958030700683594,
+          "data_error": 7.424772262573242,
+          "runtime_seconds": 0.5346758220002812,
+          "peak_rss_mb": 3481.28515625,
+          "finite": true
+        },
+        "validation": {
+          "baseline": "IDM",
+          "split": "validation",
+          "expression": "(exp(-46.9914359751*(conv_3-3*conv_1)))*exp(a*(conv_3-3*conv_1)+b*hquad)",
+          "parameters": [
+            0.09895592914925624,
+            -45.27079702626104
+          ],
+          "rho_error": 6.130311012268066,
+          "velocity_error": 6.950235843658447,
+          "data_error": 6.540273666381836,
+          "runtime_seconds": 0.7666631069987488,
+          "peak_rss_mb": 3487.28515625,
+          "finite": true
+        },
+        "validation_fitness": 6.880273666381836,
+        "feasible": true,
+        "optimizer_success": false,
+        "optimizer_message": "Maximum number of function evaluations has been exceeded.",
+        "optimizer_evaluations": 119,
+        "restarts": 2,
+        "seed": 11131,
+        "fit_runtime_seconds": 308.87111289899985
+      },
+      "meta3_fitness": 5.417018070220947,
+      "fitness_change_from_meta3": 1.4632555961608888,
+      "diagnostics": {
+        "homogeneous_feasibility": {
+          "method": "64 homogeneous fields; central node constitutive audit",
+          "samples": 64,
+          "physical_density_domain": [
+            0.0010855492437258363,
+            0.6947515294451226
+          ],
+          "finite_multiplier_and_velocity": true,
+          "positive_multiplier_all_nodes": true,
+          "nonnegative_central_corrected_velocity": true,
+          "nonincreasing_central_corrected_velocity": true,
+          "minimum_multiplier_all_nodes": 0.5765536427497864,
+          "maximum_multiplier_all_nodes": 2.6131701469421387,
+          "minimum_center_multiplier": 0.7583588361740112,
+          "maximum_center_multiplier": 0.9999993443489075,
+          "minimum_corrected_velocity": 1.2611332943889841e-20,
+          "maximum_velocity_forward_difference": -2.8594973855433636e-07,
+          "tolerance": 1e-07,
+          "passed": true
+        },
+        "wave_speed_bound": "row-wise sum(abs(full flux Jacobian)); includes all off-diagonal Hodge/convolution coupling",
+        "simulation_finite_train": true,
+        "simulation_finite_validation": true,
+        "hodge_primitives_registered": [
+          "St_oneP0",
+          "St_oneP1",
+          "St_oneD0",
+          "St_oneD1"
+        ]
+      },
+      "nonlocal": true,
+      "test_evaluated": false
+    },
+    {
+      "baseline_key": "weidmann",
+      "baseline": "Weidmann",
+      "status": "completed",
+      "fit": {
+        "expression": "(exp(0.136544052144*rho*(1-rho/0.80612097)))*exp(a*(conv_3-3*conv_1)+b*hquad)",
+        "tree_nodes": 30,
+        "parameter_names": [
+          "a",
+          "b"
+        ],
+        "parameters": [
+          -299.999140435022,
+          -1757.4346014357557
+        ],
+        "train": {
+          "baseline": "Weidmann",
+          "split": "train",
+          "expression": "(exp(0.136544052144*rho*(1-rho/0.80612097)))*exp(a*(conv_3-3*conv_1)+b*hquad)",
+          "parameters": [
+            -299.999140435022,
+            -1757.4346014357557
+          ],
+          "rho_error": 13.280428886413574,
+          "velocity_error": 58.13477325439453,
+          "data_error": 35.70759963989258,
+          "runtime_seconds": 0.26656533399909677,
+          "peak_rss_mb": 3512.78515625,
+          "finite": true
+        },
+        "validation": {
+          "baseline": "Weidmann",
+          "split": "validation",
+          "expression": "(exp(0.136544052144*rho*(1-rho/0.80612097)))*exp(a*(conv_3-3*conv_1)+b*hquad)",
+          "parameters": [
+            -299.999140435022,
+            -1757.4346014357557
+          ],
+          "rho_error": 5.911702632904053,
+          "velocity_error": 84.69588470458984,
+          "data_error": 45.303794860839844,
+          "runtime_seconds": 0.32034769900019455,
+          "peak_rss_mb": 3517.66015625,
+          "finite": true
+        },
+        "validation_fitness": 45.60379486083984,
+        "feasible": true,
+        "optimizer_success": false,
+        "optimizer_message": "Maximum number of function evaluations has been exceeded.",
+        "optimizer_evaluations": 120,
+        "restarts": 2,
+        "seed": 11132,
+        "fit_runtime_seconds": 23.14152207799998
+      },
+      "meta3_fitness": 6.322293,
+      "fitness_change_from_meta3": 39.28150186083984,
+      "diagnostics": {
+        "homogeneous_feasibility": {
+          "method": "64 homogeneous fields; central node constitutive audit",
+          "samples": 64,
+          "physical_density_domain": [
+            0.0012595640728250146,
+            0.80612097
+          ],
+          "finite_multiplier_and_velocity": true,
+          "positive_multiplier_all_nodes": true,
+          "nonnegative_central_corrected_velocity": true,
+          "nonincreasing_central_corrected_velocity": true,
+          "minimum_multiplier_all_nodes": 5.269568532639823e-07,
+          "maximum_multiplier_all_nodes": 4.403565883636475,
+          "minimum_center_multiplier": 5.269568532639823e-07,
+          "maximum_center_multiplier": 1.0001364946365356,
+          "minimum_corrected_velocity": 0.0,
+          "maximum_velocity_forward_difference": -2.6125284158240447e-09,
+          "tolerance": 1e-07,
+          "passed": true
+        },
+        "wave_speed_bound": "row-wise sum(abs(full flux Jacobian)); includes all off-diagonal Hodge/convolution coupling",
+        "simulation_finite_train": true,
+        "simulation_finite_validation": true,
+        "hodge_primitives_registered": [
+          "St_oneP0",
+          "St_oneP1",
+          "St_oneD0",
+          "St_oneD1"
+        ]
+      },
+      "nonlocal": true,
+      "test_evaluated": false
+    },
+    {
+      "baseline_key": "triangular",
+      "baseline": "Triangular",
+      "status": "completed",
+      "fit": {
+        "expression": "(1)*exp(a*(conv_3-3*conv_1)+b*hquad)",
+        "tree_nodes": 21,
+        "parameter_names": [
+          "a",
+          "b"
+        ],
+        "parameters": [
+          50.98755103014757,
+          -3.3285821466443277
+        ],
+        "train": {
+          "baseline": "Triangular",
+          "split": "train",
+          "expression": "(1)*exp(a*(conv_3-3*conv_1)+b*hquad)",
+          "parameters": [
+            50.98755103014757,
+            -3.3285821466443277
+          ],
+          "rho_error": 7.316833972930908,
+          "velocity_error": 9.430723190307617,
+          "data_error": 8.373778343200684,
+          "runtime_seconds": 0.251573378998728,
+          "peak_rss_mb": 3808.28515625,
+          "finite": true
+        },
+        "validation": {
+          "baseline": "Triangular",
+          "split": "validation",
+          "expression": "(1)*exp(a*(conv_3-3*conv_1)+b*hquad)",
+          "parameters": [
+            50.98755103014757,
+            -3.3285821466443277
+          ],
+          "rho_error": 7.997720241546631,
+          "velocity_error": 6.672584056854248,
+          "data_error": 7.3351521492004395,
+          "runtime_seconds": 0.290683903000172,
+          "peak_rss_mb": 3816.91015625,
+          "finite": true
+        },
+        "validation_fitness": 7.545152149200439,
+        "feasible": true,
+        "optimizer_success": false,
+        "optimizer_message": "Maximum number of function evaluations has been exceeded.",
+        "optimizer_evaluations": 120,
+        "restarts": 2,
+        "seed": 11133,
+        "fit_runtime_seconds": 46.40673716499987
+      },
+      "meta3_fitness": 6.457489,
+      "fitness_change_from_meta3": 1.0876631492004396,
+      "diagnostics": {
+        "homogeneous_feasibility": {
+          "method": "64 homogeneous fields; central node constitutive audit",
+          "samples": 64,
+          "physical_density_domain": [
+            0.0010489061241969466,
+            0.6712999430710797
+          ],
+          "finite_multiplier_and_velocity": true,
+          "positive_multiplier_all_nodes": true,
+          "nonnegative_central_corrected_velocity": true,
+          "nonincreasing_central_corrected_velocity": true,
+          "minimum_multiplier_all_nodes": 0.2674606740474701,
+          "maximum_multiplier_all_nodes": 1.5277122259140015,
+          "minimum_center_multiplier": 0.9811917543411255,
+          "maximum_center_multiplier": 0.9999999403953552,
+          "minimum_corrected_velocity": 1.7731109025476144e-08,
+          "maximum_velocity_forward_difference": -2.115964889526367e-06,
+          "tolerance": 1e-07,
+          "passed": true
+        },
+        "wave_speed_bound": "row-wise sum(abs(full flux Jacobian)); includes all off-diagonal Hodge/convolution coupling",
+        "simulation_finite_train": true,
+        "simulation_finite_validation": true,
+        "hodge_primitives_registered": [
+          "St_oneP0",
+          "St_oneP1",
+          "St_oneD0",
+          "St_oneD1"
+        ]
+      },
+      "nonlocal": true,
+      "test_evaluated": false
+    },
+    {
+      "baseline_key": "del_castillo",
+      "baseline": "Del Castillo",
+      "status": "completed",
+      "fit": {
+        "expression": "(exp(0.0054952026563)*exp(-2.12181160185*conv_3-256.869229508*(conv_3-3*conv_1)))*exp(a*(conv_3-3*conv_1)+b*hquad)",
+        "tree_nodes": 41,
+        "parameter_names": [
+          "a",
+          "b"
+        ],
+        "parameters": [
+          -0.2062989687198307,
+          3.0029098797322407
+        ],
+        "train": {
+          "baseline": "Del Castillo",
+          "split": "train",
+          "expression": "(exp(0.0054952026563)*exp(-2.12181160185*conv_3-256.869229508*(conv_3-3*conv_1)))*exp(a*(conv_3-3*conv_1)+b*hquad)",
+          "parameters": [
+            -0.2062989687198307,
+            3.0029098797322407
+          ],
+          "rho_error": 7.259736061096191,
+          "velocity_error": 5.466440677642822,
+          "data_error": 6.363088607788086,
+          "runtime_seconds": 0.39428518199929385,
+          "peak_rss_mb": 4104.16015625,
+          "finite": true
+        },
+        "validation": {
+          "baseline": "Del Castillo",
+          "split": "validation",
+          "expression": "(exp(0.0054952026563)*exp(-2.12181160185*conv_3-256.869229508*(conv_3-3*conv_1)))*exp(a*(conv_3-3*conv_1)+b*hquad)",
+          "parameters": [
+            -0.2062989687198307,
+            3.0029098797322407
+          ],
+          "rho_error": 6.325887203216553,
+          "velocity_error": 4.784228801727295,
+          "data_error": 5.555058002471924,
+          "runtime_seconds": 0.48980225500054075,
+          "peak_rss_mb": 4110.91015625,
+          "finite": true
+        },
+        "validation_fitness": 5.965058002471924,
+        "feasible": true,
+        "optimizer_success": true,
+        "optimizer_message": "Optimization terminated successfully.",
+        "optimizer_evaluations": 88,
+        "restarts": 2,
+        "seed": 11134,
+        "fit_runtime_seconds": 38.791814558000624
+      },
+      "meta3_fitness": 5.73022123336792,
+      "fitness_change_from_meta3": 0.23483676910400408,
+      "diagnostics": {
+        "homogeneous_feasibility": {
+          "method": "64 homogeneous fields; central node constitutive audit",
+          "samples": 64,
+          "physical_density_domain": [
+            0.0009614401496946812,
+            0.61532169
+          ],
+          "finite_multiplier_and_velocity": true,
+          "positive_multiplier_all_nodes": true,
+          "nonnegative_central_corrected_velocity": true,
+          "nonincreasing_central_corrected_velocity": true,
+          "minimum_multiplier_all_nodes": 0.13120996952056885,
+          "maximum_multiplier_all_nodes": 414.4202880859375,
+          "minimum_center_multiplier": 0.9707439541816711,
+          "maximum_center_multiplier": 1.005432367324829,
+          "minimum_corrected_velocity": 0.0,
+          "maximum_velocity_forward_difference": -0.0008634626865386963,
+          "tolerance": 1e-07,
+          "passed": true
+        },
+        "wave_speed_bound": "row-wise sum(abs(full flux Jacobian)); includes all off-diagonal Hodge/convolution coupling",
+        "simulation_finite_train": true,
+        "simulation_finite_validation": true,
+        "hodge_primitives_registered": [
+          "St_oneP0",
+          "St_oneP1",
+          "St_oneD0",
+          "St_oneD1"
+        ]
+      },
+      "nonlocal": true,
+      "test_evaluated": false
+    }
+  ],
+  "attempt_fit_runtime_seconds": 474.20166214299934,
+  "process_elapsed_seconds_at_last_write": 477.1125624919987,
+  "attempt_peak_rss_mb": 4110.91015625,
+  "completed_baselines": 5,
+  "failed_baselines": 0,
+  "execution": {
+    "checkout": "/home/alucantonio/automodel-traffic",
+    "python": "/home/alucantonio/.local/share/mamba/envs/sr_traffic/bin/python",
+    "python_version": "3.12.0",
+    "jax_platform_name": "cpu",
+    "device": "CPU"
+  },
+  "nonlocal": true,
+  "test_evaluated": false
+}

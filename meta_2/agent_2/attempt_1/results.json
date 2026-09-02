@@ -1,0 +1,299 @@
+{
+  "attempt": 1,
+  "family": "positive exponential polynomial centered at half the physical density limit",
+  "symbolic_expression": "exp(a*(rho-r*))",
+  "parameter_names": [
+    "a"
+  ],
+  "tree_nodes": 6,
+  "components_and_data": {
+    "fixed_components": "I80 preprocessing, boundary/initial conditions, DEC mesh, Godunov solver, baseline FD and calibrated baseline coefficients",
+    "tuned_components": "constants in the multiplicative correction only",
+    "dataset": "I80 prediction",
+    "training": "full chronological train times 0-63 (4,800 rows)",
+    "validation": "full chronological validation times 64-107 (3,300 rows)",
+    "test": "not evaluated",
+    "center_definition": "r* = 0.5 * physical_density_limit(baseline)"
+  },
+  "optimizer": {
+    "method": "scipy.optimize.minimize/Powell via automodel.search_utils.fit_candidate",
+    "objective": "full training E_data",
+    "bounds": [
+      [
+        -5.0,
+        5.0
+      ]
+    ],
+    "restarts": 2,
+    "max_evaluations_per_restart": 45,
+    "first_start": "zero vector (identity multiplier)",
+    "second_start": "seeded uniform draw within bounds",
+    "seed_formula": "5100 + attempt*10 + baseline_index"
+  },
+  "selection": {
+    "split": "full validation",
+    "fitness": "E_data + 0.01 * tree_nodes"
+  },
+  "diagnostics": {
+    "feasibility": "shared 79-point positivity/finiteness and corrected-velocity non-negative/non-increasing check on physical density domain",
+    "all_required_fits_completed": true
+  },
+  "execution": {
+    "checkout": "/home/alucantonio/automodel-traffic",
+    "python": "/home/alucantonio/.local/share/mamba/envs/sr_traffic/bin/python",
+    "python_version": "3.12.0",
+    "jax_platform_name": "cpu",
+    "cuda_visible_devices": "",
+    "device": "CPU",
+    "total_runtime_seconds": 83.21196367300035,
+    "peak_rss_mb": 2063.37109375,
+    "test_evaluated": false
+  },
+  "results": [
+    {
+      "expression": "exp(a*(rho-0.279975615))",
+      "tree_nodes": 6,
+      "parameter_names": [
+        "a"
+      ],
+      "parameters": [
+        -0.37645293085573256
+      ],
+      "train": {
+        "baseline": "Greenshields",
+        "split": "train",
+        "expression": "exp(a*(rho-0.279975615))",
+        "parameters": [
+          -0.37645293085573256
+        ],
+        "rho_error": 7.116166591644287,
+        "velocity_error": 6.5910797119140625,
+        "data_error": 6.853623390197754,
+        "runtime_seconds": 0.13135125299959327,
+        "peak_rss_mb": 813.890625,
+        "finite": true
+      },
+      "validation": {
+        "baseline": "Greenshields",
+        "split": "validation",
+        "expression": "exp(a*(rho-0.279975615))",
+        "parameters": [
+          -0.37645293085573256
+        ],
+        "rho_error": 6.290742874145508,
+        "velocity_error": 10.275655746459961,
+        "data_error": 8.283199310302734,
+        "runtime_seconds": 0.3800961369997822,
+        "peak_rss_mb": 829.5078125,
+        "finite": true
+      },
+      "validation_fitness": 8.343199310302735,
+      "feasible": true,
+      "optimizer_success": true,
+      "optimizer_message": "Optimization terminated successfully.",
+      "optimizer_evaluations": 60,
+      "restarts": 2,
+      "seed": 5110,
+      "fit_runtime_seconds": 9.754217841000354,
+      "baseline_key": "greenshields",
+      "physical_density_limit": 0.55995123,
+      "center_r_star": 0.279975615
+    },
+    {
+      "expression": "exp(a*(rho-0.347375764723))",
+      "tree_nodes": 6,
+      "parameter_names": [
+        "a"
+      ],
+      "parameters": [
+        2.6674705860294754
+      ],
+      "train": {
+        "baseline": "IDM",
+        "split": "train",
+        "expression": "exp(a*(rho-0.347375764723))",
+        "parameters": [
+          2.6674705860294754
+        ],
+        "rho_error": 10.88764476776123,
+        "velocity_error": 5.4263739585876465,
+        "data_error": 8.15700912475586,
+        "runtime_seconds": 0.39860414899976604,
+        "peak_rss_mb": 1267.76171875,
+        "finite": true
+      },
+      "validation": {
+        "baseline": "IDM",
+        "split": "validation",
+        "expression": "exp(a*(rho-0.347375764723))",
+        "parameters": [
+          2.6674705860294754
+        ],
+        "rho_error": 19.334074020385742,
+        "velocity_error": 5.6702728271484375,
+        "data_error": 12.50217342376709,
+        "runtime_seconds": 0.5248239579996152,
+        "peak_rss_mb": 1282.0390625,
+        "finite": true
+      },
+      "validation_fitness": 12.56217342376709,
+      "feasible": true,
+      "optimizer_success": true,
+      "optimizer_message": "Optimization terminated successfully.",
+      "optimizer_evaluations": 62,
+      "restarts": 2,
+      "seed": 5111,
+      "fit_runtime_seconds": 29.328350806000344,
+      "baseline_key": "idm",
+      "physical_density_limit": 0.6947515294451226,
+      "center_r_star": 0.3473757647225613
+    },
+    {
+      "expression": "exp(a*(rho-0.403060485))",
+      "tree_nodes": 6,
+      "parameter_names": [
+        "a"
+      ],
+      "parameters": [
+        0.49126599454469216
+      ],
+      "train": {
+        "baseline": "Weidmann",
+        "split": "train",
+        "expression": "exp(a*(rho-0.403060485))",
+        "parameters": [
+          0.49126599454469216
+        ],
+        "rho_error": 7.588151931762695,
+        "velocity_error": 5.735021114349365,
+        "data_error": 6.661586761474609,
+        "runtime_seconds": 0.14410654899984365,
+        "peak_rss_mb": 1488.74609375,
+        "finite": true
+      },
+      "validation": {
+        "baseline": "Weidmann",
+        "split": "validation",
+        "expression": "exp(a*(rho-0.403060485))",
+        "parameters": [
+          0.49126599454469216
+        ],
+        "rho_error": 14.448137283325195,
+        "velocity_error": 8.516461372375488,
+        "data_error": 11.4822998046875,
+        "runtime_seconds": 0.14769399499982683,
+        "peak_rss_mb": 1499.62109375,
+        "finite": true
+      },
+      "validation_fitness": 11.5422998046875,
+      "feasible": true,
+      "optimizer_success": true,
+      "optimizer_message": "Optimization terminated successfully.",
+      "optimizer_evaluations": 73,
+      "restarts": 2,
+      "seed": 5112,
+      "fit_runtime_seconds": 11.771910022999691,
+      "baseline_key": "weidmann",
+      "physical_density_limit": 0.80612097,
+      "center_r_star": 0.403060485
+    },
+    {
+      "expression": "exp(a*(rho-0.335649971536))",
+      "tree_nodes": 6,
+      "parameter_names": [
+        "a"
+      ],
+      "parameters": [
+        0.2122322872069219
+      ],
+      "train": {
+        "baseline": "Triangular",
+        "split": "train",
+        "expression": "exp(a*(rho-0.335649971536))",
+        "parameters": [
+          0.2122322872069219
+        ],
+        "rho_error": 8.02230453491211,
+        "velocity_error": 9.968639373779297,
+        "data_error": 8.995471954345703,
+        "runtime_seconds": 0.1483385849996921,
+        "peak_rss_mb": 1742.66015625,
+        "finite": true
+      },
+      "validation": {
+        "baseline": "Triangular",
+        "split": "validation",
+        "expression": "exp(a*(rho-0.335649971536))",
+        "parameters": [
+          0.2122322872069219
+        ],
+        "rho_error": 9.799481391906738,
+        "velocity_error": 7.311349391937256,
+        "data_error": 8.555415153503418,
+        "runtime_seconds": 0.1643738160000794,
+        "peak_rss_mb": 1749.5859375,
+        "finite": true
+      },
+      "validation_fitness": 8.615415153503418,
+      "feasible": true,
+      "optimizer_success": false,
+      "optimizer_message": "Maximum number of function evaluations has been exceeded.",
+      "optimizer_evaluations": 90,
+      "restarts": 2,
+      "seed": 5113,
+      "fit_runtime_seconds": 15.388748545999988,
+      "baseline_key": "triangular",
+      "physical_density_limit": 0.6712999430710797,
+      "center_r_star": 0.3356499715355398
+    },
+    {
+      "expression": "exp(a*(rho-0.307660845))",
+      "tree_nodes": 6,
+      "parameter_names": [
+        "a"
+      ],
+      "parameters": [
+        2.287139910878736
+      ],
+      "train": {
+        "baseline": "Del Castillo",
+        "split": "train",
+        "expression": "exp(a*(rho-0.307660845))",
+        "parameters": [
+          2.287139910878736
+        ],
+        "rho_error": 11.274238586425781,
+        "velocity_error": 5.600252151489258,
+        "data_error": 8.43724536895752,
+        "runtime_seconds": 0.252088683000693,
+        "peak_rss_mb": 2056.62109375,
+        "finite": true
+      },
+      "validation": {
+        "baseline": "Del Castillo",
+        "split": "validation",
+        "expression": "exp(a*(rho-0.307660845))",
+        "parameters": [
+          2.287139910878736
+        ],
+        "rho_error": 19.613121032714844,
+        "velocity_error": 5.592000484466553,
+        "data_error": 12.602560997009277,
+        "runtime_seconds": 0.26239828599955217,
+        "peak_rss_mb": 2063.37109375,
+        "finite": true
+      },
+      "validation_fitness": 12.662560997009278,
+      "feasible": true,
+      "optimizer_success": true,
+      "optimizer_message": "Optimization terminated successfully.",
+      "optimizer_evaluations": 62,
+      "restarts": 2,
+      "seed": 5114,
+      "fit_runtime_seconds": 16.967954530000497,
+      "baseline_key": "del_castillo",
+      "physical_density_limit": 0.61532169,
+      "center_r_star": 0.307660845
+    }
+  ]
+}

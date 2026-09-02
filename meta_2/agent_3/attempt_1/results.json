@@ -1,0 +1,588 @@
+{
+  "attempt": 1,
+  "candidate": {
+    "expression": "1 + a*rho",
+    "tree_nodes": 5,
+    "parameter_names": [
+      "a"
+    ]
+  },
+  "protocol": {
+    "dataset": "I80",
+    "problem": "prediction",
+    "fit_split": "full train (times 0-63)",
+    "selection_split": "full validation (times 64-107)",
+    "test_evaluated": false,
+    "optimizer": "scipy.optimize.minimize/Powell",
+    "bounds_each_parameter": [
+      -0.9,
+      4.0
+    ],
+    "restarts": 2,
+    "max_evaluations_per_restart": 45,
+    "seed_formula": "6100 + 10*attempt + baseline_index",
+    "baseline_order": [
+      "greenshields",
+      "idm",
+      "weidmann",
+      "triangular",
+      "del_castillo"
+    ],
+    "fitness": "validation.data_error + 0.01*tree_nodes",
+    "feasibility": "finite positive multiplier and positive denominator on rho in [0,1]; finite nonnegative non-increasing corrected velocity on physical domain"
+  },
+  "baselines": {
+    "greenshields": {
+      "status": "completed",
+      "fit": {
+        "expression": "1 + a*rho",
+        "tree_nodes": 5,
+        "parameter_names": [
+          "a"
+        ],
+        "parameters": [
+          -0.0587823927871582
+        ],
+        "train": {
+          "baseline": "Greenshields",
+          "split": "train",
+          "expression": "1 + a*rho",
+          "parameters": [
+            -0.0587823927871582
+          ],
+          "rho_error": 7.506843090057373,
+          "velocity_error": 6.794493198394775,
+          "data_error": 7.150668144226074,
+          "runtime_seconds": 0.13993957999991835,
+          "peak_rss_mb": 890.36328125,
+          "finite": true
+        },
+        "validation": {
+          "baseline": "Greenshields",
+          "split": "validation",
+          "expression": "1 + a*rho",
+          "parameters": [
+            -0.0587823927871582
+          ],
+          "rho_error": 10.009268760681152,
+          "velocity_error": 7.653007507324219,
+          "data_error": 8.831138610839844,
+          "runtime_seconds": 0.4259105470000577,
+          "peak_rss_mb": 903.24609375,
+          "finite": true
+        },
+        "validation_fitness": 8.881138610839844,
+        "feasible": true,
+        "feasibility": {
+          "feasible": true,
+          "reason": "passed",
+          "checks": {
+            "finite": true,
+            "positive_multiplier_observed_domain": true,
+            "nonsingular_positive_denominator_observed_domain": true,
+            "nonnegative_velocity_physical_domain": true,
+            "nonincreasing_velocity_physical_domain": true
+          },
+          "observed_density_domain": [
+            0.0,
+            1.0
+          ],
+          "physical_density_domain": [
+            0.0007087990525178611,
+            0.55995123
+          ],
+          "minimum_multiplier": 0.9412176012992859,
+          "minimum_denominator": 1.0,
+          "minimum_corrected_velocity": 0.0,
+          "maximum_velocity_forward_difference": -0.006770014762878418,
+          "samples": 79,
+          "tolerance": 1e-07
+        },
+        "optimizer": {
+          "name": "scipy.optimize.minimize/Powell",
+          "success": false,
+          "message": "Maximum number of function evaluations has been exceeded.",
+          "objective_evaluations": 90,
+          "infeasible_objective_evaluations": 0,
+          "restarts": 2,
+          "restart_reports": [
+            {
+              "restart": 0,
+              "initial_parameters": [
+                0.0
+              ],
+              "final_parameters": [
+                -0.0587823927871582
+              ],
+              "training_objective": 7.150668144226074,
+              "success": false,
+              "message": "Maximum number of function evaluations has been exceeded.",
+              "evaluations": 45,
+              "runtime_seconds": 7.471211611000399
+            },
+            {
+              "restart": 1,
+              "initial_parameters": [
+                2.076752571062457
+              ],
+              "final_parameters": [
+                -0.059564502288909395
+              ],
+              "training_objective": 7.150679588317871,
+              "success": false,
+              "message": "Maximum number of function evaluations has been exceeded.",
+              "evaluations": 45,
+              "runtime_seconds": 6.584775665000052
+            }
+          ]
+        },
+        "seed": 6110,
+        "fit_runtime_seconds": 14.683832476000134,
+        "peak_rss_mb": 903.24609375,
+        "test_evaluated": false
+      }
+    },
+    "idm": {
+      "status": "completed",
+      "fit": {
+        "expression": "1 + a*rho",
+        "tree_nodes": 5,
+        "parameter_names": [
+          "a"
+        ],
+        "parameters": [
+          -0.27337868770114404
+        ],
+        "train": {
+          "baseline": "IDM",
+          "split": "train",
+          "expression": "1 + a*rho",
+          "parameters": [
+            -0.27337868770114404
+          ],
+          "rho_error": 7.132697582244873,
+          "velocity_error": 7.604856491088867,
+          "data_error": 7.368777275085449,
+          "runtime_seconds": 0.41054270200038445,
+          "peak_rss_mb": 1496.19140625,
+          "finite": true
+        },
+        "validation": {
+          "baseline": "IDM",
+          "split": "validation",
+          "expression": "1 + a*rho",
+          "parameters": [
+            -0.27337868770114404
+          ],
+          "rho_error": 6.897742748260498,
+          "velocity_error": 8.37674617767334,
+          "data_error": 7.63724422454834,
+          "runtime_seconds": 0.5491864469995562,
+          "peak_rss_mb": 1505.56640625,
+          "finite": true
+        },
+        "validation_fitness": 7.68724422454834,
+        "feasible": true,
+        "feasibility": {
+          "feasible": true,
+          "reason": "passed",
+          "checks": {
+            "finite": true,
+            "positive_multiplier_observed_domain": true,
+            "nonsingular_positive_denominator_observed_domain": true,
+            "nonnegative_velocity_physical_domain": true,
+            "nonincreasing_velocity_physical_domain": true
+          },
+          "observed_density_domain": [
+            0.0,
+            1.0
+          ],
+          "physical_density_domain": [
+            0.0008794323075562716,
+            0.6947515294451226
+          ],
+          "minimum_multiplier": 0.7266212701797485,
+          "minimum_denominator": 1.0,
+          "minimum_corrected_velocity": 1.3471273624550376e-20,
+          "maximum_velocity_forward_difference": -8.749101709781826e-08,
+          "samples": 79,
+          "tolerance": 1e-07
+        },
+        "optimizer": {
+          "name": "scipy.optimize.minimize/Powell",
+          "success": false,
+          "message": "Maximum number of function evaluations has been exceeded.",
+          "objective_evaluations": 90,
+          "infeasible_objective_evaluations": 0,
+          "restarts": 2,
+          "restart_reports": [
+            {
+              "restart": 0,
+              "initial_parameters": [
+                0.0
+              ],
+              "final_parameters": [
+                -0.27337868770114404
+              ],
+              "training_objective": 7.368777275085449,
+              "success": false,
+              "message": "Maximum number of function evaluations has been exceeded.",
+              "evaluations": 45,
+              "runtime_seconds": 21.734310417000415
+            },
+            {
+              "restart": 1,
+              "initial_parameters": [
+                1.9424308412819227
+              ],
+              "final_parameters": [
+                -0.2733786877011441
+              ],
+              "training_objective": 7.368777275085449,
+              "success": false,
+              "message": "Maximum number of function evaluations has been exceeded.",
+              "evaluations": 45,
+              "runtime_seconds": 21.410767977999967
+            }
+          ]
+        },
+        "seed": 6111,
+        "fit_runtime_seconds": 44.1561468509999,
+        "peak_rss_mb": 1505.56640625,
+        "test_evaluated": false
+      }
+    },
+    "weidmann": {
+      "status": "completed",
+      "fit": {
+        "expression": "1 + a*rho",
+        "tree_nodes": 5,
+        "parameter_names": [
+          "a"
+        ],
+        "parameters": [
+          0.16375362278426278
+        ],
+        "train": {
+          "baseline": "Weidmann",
+          "split": "train",
+          "expression": "1 + a*rho",
+          "parameters": [
+            0.16375362278426278
+          ],
+          "rho_error": 8.043331146240234,
+          "velocity_error": 6.201798915863037,
+          "data_error": 7.122565269470215,
+          "runtime_seconds": 0.13294072999997297,
+          "peak_rss_mb": 1678.48828125,
+          "finite": true
+        },
+        "validation": {
+          "baseline": "Weidmann",
+          "split": "validation",
+          "expression": "1 + a*rho",
+          "parameters": [
+            0.16375362278426278
+          ],
+          "rho_error": 7.3766608238220215,
+          "velocity_error": 6.638988494873047,
+          "data_error": 7.007824897766113,
+          "runtime_seconds": 0.1476458269999057,
+          "peak_rss_mb": 1683.359375,
+          "finite": true
+        },
+        "validation_fitness": 7.057824897766113,
+        "feasible": true,
+        "feasibility": {
+          "feasible": true,
+          "reason": "passed",
+          "checks": {
+            "finite": true,
+            "positive_multiplier_observed_domain": true,
+            "nonsingular_positive_denominator_observed_domain": true,
+            "nonnegative_velocity_physical_domain": true,
+            "nonincreasing_velocity_physical_domain": true
+          },
+          "observed_density_domain": [
+            0.0,
+            1.0
+          ],
+          "physical_density_domain": [
+            0.001020406256429851,
+            0.80612097
+          ],
+          "minimum_multiplier": 1.0,
+          "minimum_denominator": 1.0,
+          "minimum_corrected_velocity": 0.0,
+          "maximum_velocity_forward_difference": 0.0,
+          "samples": 79,
+          "tolerance": 1e-07
+        },
+        "optimizer": {
+          "name": "scipy.optimize.minimize/Powell",
+          "success": true,
+          "message": "Optimization terminated successfully.",
+          "objective_evaluations": 65,
+          "infeasible_objective_evaluations": 0,
+          "restarts": 2,
+          "restart_reports": [
+            {
+              "restart": 0,
+              "initial_parameters": [
+                0.0
+              ],
+              "final_parameters": [
+                0.16375362278426278
+              ],
+              "training_objective": 7.122565269470215,
+              "success": true,
+              "message": "Optimization terminated successfully.",
+              "evaluations": 20,
+              "runtime_seconds": 2.9779622530004417
+            },
+            {
+              "restart": 1,
+              "initial_parameters": [
+                0.750517257929774
+              ],
+              "final_parameters": [
+                0.16375362278426356
+              ],
+              "training_objective": 7.122565269470215,
+              "success": false,
+              "message": "Maximum number of function evaluations has been exceeded.",
+              "evaluations": 45,
+              "runtime_seconds": 7.046126797999932
+            }
+          ]
+        },
+        "seed": 6112,
+        "fit_runtime_seconds": 10.308894456999951,
+        "peak_rss_mb": 1683.359375,
+        "test_evaluated": false
+      }
+    },
+    "triangular": {
+      "status": "completed",
+      "fit": {
+        "expression": "1 + a*rho",
+        "tree_nodes": 5,
+        "parameter_names": [
+          "a"
+        ],
+        "parameters": [
+          -0.18032558367332555
+        ],
+        "train": {
+          "baseline": "Triangular",
+          "split": "train",
+          "expression": "1 + a*rho",
+          "parameters": [
+            -0.18032558367332555
+          ],
+          "rho_error": 7.768465518951416,
+          "velocity_error": 10.36376667022705,
+          "data_error": 9.066116333007812,
+          "runtime_seconds": 0.8129821160000574,
+          "peak_rss_mb": 1865.20703125,
+          "finite": true
+        },
+        "validation": {
+          "baseline": "Triangular",
+          "split": "validation",
+          "expression": "1 + a*rho",
+          "parameters": [
+            -0.18032558367332555
+          ],
+          "rho_error": 6.4954023361206055,
+          "velocity_error": 8.901710510253906,
+          "data_error": 7.698556423187256,
+          "runtime_seconds": 0.15720311700079037,
+          "peak_rss_mb": 1872.46484375,
+          "finite": true
+        },
+        "validation_fitness": 7.748556423187256,
+        "feasible": true,
+        "feasibility": {
+          "feasible": true,
+          "reason": "passed",
+          "checks": {
+            "finite": true,
+            "positive_multiplier_observed_domain": true,
+            "nonsingular_positive_denominator_observed_domain": true,
+            "nonnegative_velocity_physical_domain": true,
+            "nonincreasing_velocity_physical_domain": true
+          },
+          "observed_density_domain": [
+            0.0,
+            1.0
+          ],
+          "physical_density_domain": [
+            0.0008497467497363687,
+            0.6712999430710797
+          ],
+          "minimum_multiplier": 0.8196744322776794,
+          "minimum_denominator": 1.0,
+          "minimum_corrected_velocity": 1.5883452775256046e-08,
+          "maximum_velocity_forward_difference": 0.0,
+          "samples": 79,
+          "tolerance": 1e-07
+        },
+        "optimizer": {
+          "name": "scipy.optimize.minimize/Powell",
+          "success": false,
+          "message": "Maximum number of function evaluations has been exceeded.",
+          "objective_evaluations": 69,
+          "infeasible_objective_evaluations": 0,
+          "restarts": 2,
+          "restart_reports": [
+            {
+              "restart": 0,
+              "initial_parameters": [
+                0.0
+              ],
+              "final_parameters": [
+                -0.18026999891176068
+              ],
+              "training_objective": 9.06612777709961,
+              "success": true,
+              "message": "Optimization terminated successfully.",
+              "evaluations": 24,
+              "runtime_seconds": 3.6292361799996797
+            },
+            {
+              "restart": 1,
+              "initial_parameters": [
+                0.7363528723386342
+              ],
+              "final_parameters": [
+                -0.18032558367332555
+              ],
+              "training_objective": 9.066116333007812,
+              "success": false,
+              "message": "Maximum number of function evaluations has been exceeded.",
+              "evaluations": 45,
+              "runtime_seconds": 6.674272404000476
+            }
+          ]
+        },
+        "seed": 6113,
+        "fit_runtime_seconds": 11.278051232000507,
+        "peak_rss_mb": 1872.46484375,
+        "test_evaluated": false
+      }
+    },
+    "del_castillo": {
+      "status": "completed",
+      "fit": {
+        "expression": "1 + a*rho",
+        "tree_nodes": 5,
+        "parameter_names": [
+          "a"
+        ],
+        "parameters": [
+          -0.07907410620274553
+        ],
+        "train": {
+          "baseline": "Del Castillo",
+          "split": "train",
+          "expression": "1 + a*rho",
+          "parameters": [
+            -0.07907410620274553
+          ],
+          "rho_error": 7.247148036956787,
+          "velocity_error": 6.744029521942139,
+          "data_error": 6.995588779449463,
+          "runtime_seconds": 0.22985269000037079,
+          "peak_rss_mb": 2192.30078125,
+          "finite": true
+        },
+        "validation": {
+          "baseline": "Del Castillo",
+          "split": "validation",
+          "expression": "1 + a*rho",
+          "parameters": [
+            -0.07907410620274553
+          ],
+          "rho_error": 6.037877082824707,
+          "velocity_error": 7.40673303604126,
+          "data_error": 6.7223052978515625,
+          "runtime_seconds": 0.2312790780006253,
+          "peak_rss_mb": 2198.30078125,
+          "finite": true
+        },
+        "validation_fitness": 6.772305297851562,
+        "feasible": true,
+        "feasibility": {
+          "feasible": true,
+          "reason": "passed",
+          "checks": {
+            "finite": true,
+            "positive_multiplier_observed_domain": true,
+            "nonsingular_positive_denominator_observed_domain": true,
+            "nonnegative_velocity_physical_domain": true,
+            "nonincreasing_velocity_physical_domain": true
+          },
+          "observed_density_domain": [
+            0.0,
+            1.0
+          ],
+          "physical_density_domain": [
+            0.0007788882357999682,
+            0.61532169
+          ],
+          "minimum_multiplier": 0.9209259152412415,
+          "minimum_denominator": 1.0,
+          "minimum_corrected_velocity": 0.0,
+          "maximum_velocity_forward_difference": -0.0003619194030761719,
+          "samples": 79,
+          "tolerance": 1e-07
+        },
+        "optimizer": {
+          "name": "scipy.optimize.minimize/Powell",
+          "success": false,
+          "message": "Maximum number of function evaluations has been exceeded.",
+          "objective_evaluations": 90,
+          "infeasible_objective_evaluations": 0,
+          "restarts": 2,
+          "restart_reports": [
+            {
+              "restart": 0,
+              "initial_parameters": [
+                0.0
+              ],
+              "final_parameters": [
+                -0.07907301785099115
+              ],
+              "training_objective": 6.995589256286621,
+              "success": false,
+              "message": "Maximum number of function evaluations has been exceeded.",
+              "evaluations": 45,
+              "runtime_seconds": 10.943591446999562
+            },
+            {
+              "restart": 1,
+              "initial_parameters": [
+                0.9259050940768682
+              ],
+              "final_parameters": [
+                -0.07907410620274553
+              ],
+              "training_objective": 6.995588779449463,
+              "success": false,
+              "message": "Maximum number of function evaluations has been exceeded.",
+              "evaluations": 45,
+              "runtime_seconds": 11.653632316000767
+            }
+          ]
+        },
+        "seed": 6114,
+        "fit_runtime_seconds": 23.062247285000012,
+        "peak_rss_mb": 2198.30078125,
+        "test_evaluated": false
+      }
+    }
+  },
+  "attempt_runtime_seconds": 103.49225579500035,
+  "attempt_peak_rss_mb": 2198.30078125
+}

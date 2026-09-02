@@ -1,0 +1,93 @@
+{
+  "baseline_key": "idm",
+  "baseline": "IDM",
+  "frozen_source": "meta_4/agent_2/attempt_2/model.py",
+  "expression": "exp(a*C+b*St_oneD1(SquareD1(St_oneP0(rho)))*C), C=conv_3(rho,ones)-3*conv_1(rho,ones)",
+  "tree_nodes": 32,
+  "parameter_names": [
+    "contrast",
+    "quadratic_hodge_contrast"
+  ],
+  "selection_parameters": [
+    -46.991435975062515,
+    -119537.38834933033
+  ],
+  "refit_parameters": [
+    -46.99143597506256,
+    -119537.38834933029
+  ],
+  "bounds": [
+    [
+      -300.0,
+      300.0
+    ],
+    [
+      -1000000.0,
+      1000000.0
+    ]
+  ],
+  "optimizer": {
+    "name": "scipy.optimize.minimize/Powell on scaled [-1,1] parameters",
+    "starts": 2,
+    "max_evaluations_per_start": 180,
+    "objective_evaluations": 57,
+    "selected_from": "explicit_start",
+    "selected_objective": 6.441920431253582,
+    "runs": [
+      {
+        "success": true,
+        "message": "Optimization terminated successfully.",
+        "fun": 100.0,
+        "nfev": 29,
+        "unit_parameters": [
+          0.022951292627097247,
+          -0.23646777986301176
+        ]
+      },
+      {
+        "success": true,
+        "message": "Optimization terminated successfully.",
+        "fun": 100.0,
+        "nfev": 28,
+        "unit_parameters": [
+          -0.2758924234382357,
+          -0.9994399328358549
+        ]
+      }
+    ]
+  },
+  "feasible": true,
+  "train_validation": {
+    "baseline": "IDM",
+    "split": "train_validation",
+    "expression": "exp(a*C+b*St_oneD1(SquareD1(St_oneP0(rho)))*C), C=conv_3(rho,ones)-3*conv_1(rho,ones)",
+    "parameters": [
+      -46.99143597506256,
+      -119537.38834933029
+    ],
+    "rho_error": 6.039446828202438,
+    "velocity_error": 6.8443940343047265,
+    "data_error": 6.441920431253582,
+    "runtime_seconds": 1.2808298920008383,
+    "peak_rss_mb": 3064.3515625,
+    "finite": true
+  },
+  "test": {
+    "baseline": "IDM",
+    "split": "test",
+    "expression": "exp(a*C+b*St_oneD1(SquareD1(St_oneP0(rho)))*C), C=conv_3(rho,ones)-3*conv_1(rho,ones)",
+    "parameters": [
+      -46.99143597506256,
+      -119537.38834933029
+    ],
+    "rho_error": 6.570095971838569,
+    "velocity_error": 7.664509929642573,
+    "data_error": 7.117302950740571,
+    "runtime_seconds": 2.2727943249992677,
+    "peak_rss_mb": 3091.078125,
+    "finite": true
+  },
+  "test_evaluation_count": 1,
+  "total_runtime_seconds": 177.20756389099915,
+  "peak_rss_mb": 3091.078125
+}

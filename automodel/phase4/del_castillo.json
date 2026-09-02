@@ -1,0 +1,104 @@
+{
+  "baseline_key": "del_castillo",
+  "baseline": "Del Castillo",
+  "frozen_source": "meta_3/agent_3/attempt_3/model.py",
+  "expression": "exp(c0+a*conv_3(rho,ones)+b*(conv_3(rho,ones)-3*conv_1(rho,ones)))",
+  "tree_nodes": 21,
+  "parameter_names": [
+    "c0",
+    "conv_3",
+    "contrast"
+  ],
+  "selection_parameters": [
+    0.0054952026563039776,
+    -2.1218116018455078,
+    -256.86922950791177
+  ],
+  "refit_parameters": [
+    0.07388543849777629,
+    -3.328070298172179,
+    -227.98310112971478
+  ],
+  "bounds": [
+    [
+      -1.0,
+      1.0
+    ],
+    [
+      -20.0,
+      20.0
+    ],
+    [
+      -1000.0,
+      1000.0
+    ]
+  ],
+  "optimizer": {
+    "name": "scipy.optimize.minimize/Powell on scaled [-1,1] parameters",
+    "starts": 2,
+    "max_evaluations_per_start": 180,
+    "objective_evaluations": 208,
+    "selected_from": "powell",
+    "selected_objective": 5.868819922212179,
+    "runs": [
+      {
+        "success": true,
+        "message": "Optimization terminated successfully.",
+        "fun": 5.869130378537919,
+        "nfev": 73,
+        "unit_parameters": [
+          0.07649109970082164,
+          -0.17557886077194515,
+          -0.23307866013792417
+        ]
+      },
+      {
+        "success": true,
+        "message": "Optimization terminated successfully.",
+        "fun": 5.868819922212179,
+        "nfev": 135,
+        "unit_parameters": [
+          0.07388543849777623,
+          -0.16640351490860897,
+          -0.2279831011297148
+        ]
+      }
+    ]
+  },
+  "feasible": true,
+  "train_validation": {
+    "baseline": "Del Castillo",
+    "split": "train_validation",
+    "expression": "exp(c0+a*conv_3(rho,ones)+b*(conv_3(rho,ones)-3*conv_1(rho,ones)))",
+    "parameters": [
+      0.07388543849777629,
+      -3.328070298172179,
+      -227.98310112971478
+    ],
+    "rho_error": 6.4460127316056255,
+    "velocity_error": 5.291627112818732,
+    "data_error": 5.868819922212179,
+    "runtime_seconds": 0.5579836969991447,
+    "peak_rss_mb": 1753.515625,
+    "finite": true
+  },
+  "test": {
+    "baseline": "Del Castillo",
+    "split": "test",
+    "expression": "exp(c0+a*conv_3(rho,ones)+b*(conv_3(rho,ones)-3*conv_1(rho,ones)))",
+    "parameters": [
+      0.07388543849777629,
+      -3.328070298172179,
+      -227.98310112971478
+    ],
+    "rho_error": 6.421892879739014,
+    "velocity_error": 7.137334922176145,
+    "data_error": 6.77961390095758,
+    "runtime_seconds": 1.0813116079989413,
+    "peak_rss_mb": 1780.3984375,
+    "finite": true
+  },
+  "test_evaluation_count": 1,
+  "total_runtime_seconds": 142.65337631399962,
+  "peak_rss_mb": 1780.3984375
+}
