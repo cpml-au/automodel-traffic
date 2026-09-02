@@ -5,33 +5,29 @@
 </p>
 
 Automodel Traffic provides fitted, interpretable corrections to five classical
-traffic fundamental diagrams for the NGSIM I80 prediction benchmark. The
-repository includes the corrected flux functions, the frozen coefficients,
-scripts for reproducing the simulations and tables, and the complete evaluation
-records. The model structures were discovered using the
-[`automodel` skill](https://github.com/Unlayer-AI/automodel).
-
-## Multiplicative-correction hypothesis
-
-The project assumes that a classical fundamental diagram captures the main
-traffic physics but may have a systematic, data-dependent bias. Instead of
-replacing it, Automodel multiplies its flux by a learned correction:
+traffic fundamental diagrams for the NGSIM I80 prediction benchmark. It starts
+from the hypothesis that a classical diagram captures the main traffic physics
+but may retain a systematic, data-dependent bias. Instead of replacing that
+diagram, Automodel multiplies its flux by a learned correction:
 
 ```text
 q_corrected(rho) = q_baseline(rho; theta) * g(rho; c)
 ```
 
-- `q_baseline` is Greenshields, IDM, Weidmann, Triangular, or Del Castillo.
-- `theta` contains the calibrated coefficients of that baseline.
-- `g` is a compact correction with fitted coefficients `c`.
-- `g = 1` recovers the original fundamental diagram.
-
-The selected corrections use positive exponential multipliers. This preserves
-the baseline's units and zeros while allowing its magnitude and shape to change.
-Some corrections also use short-range density contrasts, so the corrected flux
-can respond to the local traffic state around a mesh node. Finite simulations,
+Here `q_baseline` is Greenshields, IDM, Weidmann, Triangular, or Del Castillo;
+`theta` contains its calibrated coefficients; and `g` is a compact correction
+with fitted coefficients `c`. Setting `g = 1` recovers the original fundamental
+diagram. The selected corrections use positive exponential multipliers, which
+preserve the baseline's units and zeros while allowing its magnitude and shape
+to change. Some corrections also use short-range density contrasts so that the
+flux can respond to the traffic state around a mesh node. Finite simulations,
 non-negative velocity, and the relevant monotonicity checks are enforced
 separately.
+
+The repository includes the corrected flux functions, frozen coefficients,
+scripts for reproducing the simulations and tables, and complete evaluation
+records. The model structures were discovered using the
+[`automodel` skill](https://github.com/Unlayer-AI/automodel).
 
 The final correction structures and parameter bounds are defined in
 [`automodel/final_models.py`](automodel/final_models.py). Their I80 refit
@@ -77,8 +73,9 @@ refit against the held-out test interval.
 
 ## Use a corrected flux in Python
 
-The corrected functions accept a DCTKit primal 0-cochain for density, followed
-by the usual coefficients of the chosen baseline:
+The corrected functions accept a
+[`DCTKit`](https://github.com/cpml-au/dctkit) primal 0-cochain for density,
+followed by the usual coefficients of the chosen baseline:
 
 ```python
 from sr_traffic.fd.diagrams import triangular_corrected_flux
@@ -112,7 +109,33 @@ different road, split, or normalization.
 ## Recalibrate a classical baseline
 
 The five YAML files under `src/sr_traffic/fd/configs/` define the baseline
-calibration bounds and optimizer settings. To recalibrate one baseline:
+calibration problem. Each file has the same fields:
+
+| YAML field | Meaning |
+|---|---|
+| `road_name` | Dataset passed to preprocessing. The supplied configs use `I80`. |
+| `task` | Split strategy: `prediction` splits chronologically; `reconstruction` holds out spatial locations. |
+| `flux` | Case-sensitive flux function from `src/sr_traffic/fd/diagrams.py`. |
+| `bounds` | Two arrays, `[lower_bounds, upper_bounds]`, ordered like the selected flux function's parameters after `rho`. |
+| `opt.num_ind` | PyGMO population size for the simple evolutionary algorithm. |
+| `opt.num_gen` | Number of evolutionary generations. |
+
+The parameters represented by `bounds` are:
+
+| Config | Parameter order | Meaning |
+|---|---|---|
+| `greenshields.yaml` | `v_max`, `rho_max` | Free-flow speed; jam density |
+| `idm.yaml` | `s0`, `T`, `delta`, `v0` | Minimum gap; time headway; acceleration exponent; desired speed |
+| `weidmann.yaml` | `v_max`, `rho_max`, `lambda_w` | Free-flow speed; jam density; curve-shape parameter |
+| `triangular.yaml` | `V_0`, `l_eff`, `T` | Free-flow speed; effective vehicle length; time headway |
+| `del_castillo.yaml` | `C_jam`, `V_max`, `rho_max`, `theta` | Congested-wave speed scale; free-flow speed; jam density; curve-shape parameter |
+
+The data and model variables are nondimensionalized during preprocessing, so
+the numeric bounds in these files are expressed in normalized units. The
+supplied `num_ind: 1000` and `num_gen: 100` values are full calibration settings
+and can be reduced for a quicker trial.
+
+To recalibrate one baseline:
 
 ```bash
 python src/sr_traffic/fd/calibration.py \
@@ -120,9 +143,9 @@ python src/sr_traffic/fd/calibration.py \
 ```
 
 Replace `triangular.yaml` with `greenshields.yaml`, `idm.yaml`,
-`weidmann.yaml`, or `del_castillo.yaml` as needed. The supplied population and
-generation counts are full calibration settings and can be reduced for a quick
-trial.
+`weidmann.yaml`, or `del_castillo.yaml` as needed. The script minimizes the
+average normalized density and velocity error on the training partition and
+prints the best parameter vector in the order shown above.
 
 ## Classical, SR, and Automodel results
 
@@ -134,20 +157,31 @@ E_v    = 100 * sum((v_model - v_data)^2) / sum(v_data^2)
 E_data = 0.5 * (E_rho + E_v)
 ```
 
-Lower is better. The table reports unpenalized `E_data` on the held-out
-chronological test interval. Classical and Automodel values come from this
-checkout. The SR values were reproduced with the official
+Lower is better. The table reports unpenalized `E_data` on the training and
+held-out chronological test intervals. Classical and Automodel values come from
+this checkout. The SR values were reproduced with the official
 [`cpml-au/SR-Traffic`](https://github.com/cpml-au/SR-Traffic) results script at
 commit `3bf285ab1d6b2b61f0c0f27c0d80e42633b84ac4`; those models are benchmarks and
-are not bundled here.
+are not bundled here. Bold test scores identify the best result in each baseline
+family.
 
-| Baseline family | Classical baseline | SR benchmark | Automodel | Best method |
-|---|---:|---:|---:|---|
-| Greenshields | 9.230426 | 8.602553 | **7.091936** | Automodel |
-| IDM | 6.957441 | **6.225629** | 7.117303 | SR |
-| Weidmann | 7.651073 | **6.860641** | 7.458993 | SR |
-| Triangular | 7.918859 | **6.727777** | 7.118426 | SR |
-| Del Castillo | 7.196903 | 6.800595 | **6.779614** | Automodel |
+| Baseline family | Model | Source | Training `E_data` | Test `E_data` |
+|---|---|---|---:|---:|
+| Greenshields | Greenshields | Classical baseline | 8.166908 | 9.230426 |
+| Greenshields | SR-Greenshields | Upstream SR | 7.464482 | 8.602553 |
+| Greenshields | automodel-Greenshields | Automodel | 5.821048 | **7.091936** |
+| IDM | IDM | Classical baseline | 7.319251 | 6.957441 |
+| IDM | SR-IDM | Upstream SR | 6.597450 | **6.225629** |
+| IDM | automodel-IDM | Automodel | 6.368446 | 7.117303 |
+| Weidmann | Weidmann | Classical baseline | 6.858360 | 7.651073 |
+| Weidmann | SR-Weidmann | Upstream SR | 5.957339 | **6.860641** |
+| Weidmann | automodel-Weidmann | Automodel | 6.713568 | 7.458993 |
+| Triangular | Triangular | Classical baseline | 7.988255 | 7.918859 |
+| Triangular | SR-Triangular | Upstream SR | 7.229762 | **6.727777** |
+| Triangular | automodel-Triangular | Automodel | 6.673826 | 7.118426 |
+| Del Castillo | Del Castillo | Classical baseline | 6.824368 | 7.196903 |
+| Del Castillo | SR-Del Castillo | Upstream SR | 6.098916 | 6.800595 |
+| Del Castillo | automodel-Del Castillo | Automodel | 5.811699 | **6.779614** |
 
 Automodel is best for Greenshields and Del Castillo and improves four of the
 five classical baselines. The SR benchmark is best for IDM, Weidmann, and
@@ -159,22 +193,6 @@ The SR benchmark and this checkout use the same chronological I80 task and score
 definition, but they were executed from different commits. The comparison is
 therefore a reproduced benchmark, not a claim that all implementations share an
 identical code path.
-
-## Evaluation scope
-
-The 180 I80 samples are split chronologically: times 0--63 for training, 64--107
-for validation, and 108--179 for the final test. The correction structures were
-selected without test access, refitted on training plus validation, and then
-evaluated once on the test block.
-
-The test block is now consumed and should not be used for further model
-selection. Full-series density normalization and observed future boundary
-density are retained for benchmark compatibility, so this is a conditional
-prediction benchmark rather than a fully autonomous forecast.
-
-Detailed final coefficients, component errors, runtime, memory, and feasibility
-results are in [`automodel/phase4/`](automodel/phase4/). The complete experiment
-record is in [`CONTEXT.md`](CONTEXT.md).
 
 ## Tests
 
