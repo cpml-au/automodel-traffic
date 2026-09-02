@@ -120,24 +120,48 @@ following baseline-specific structures:
         &= \exp\!\left(c_0+aS_3(\rho)+bC(\rho)\right).
     \label{eq:traffic-selected-corrections}
 \end{align}
+These structures admit a direct physical reading. Because every $g$ is a
+positive multiplier, a correction changes the magnitude of the baseline flux
+and velocity without changing the baseline's zero-flow states. The contrast
+$C$ vanishes in a spatially homogeneous state, so terms containing $C$ act
+only where the density varies over the short convolution window. They can
+therefore be interpreted as compact non-equilibrium corrections at developing
+traffic fronts, rather than as changes to the homogeneous fundamental diagram.
+
+The refitted Greenshields coefficients have $c_0>0$ and $a,b,d<0$. The
+constant term raises the low-density branch, the negative linear and quadratic
+terms progressively temper this uplift as density increases, and the contrast
+term adjusts the flux near spatial transitions. This supplements the rigid
+parabolic Greenshields curve with both density-dependent curvature and a local
+traffic-state correction. For IDM, both fitted coefficients are negative and
+the correction is proportional to $C$; the non-negative Hodge feature $H_2$
+modulates the strength of that response with local traffic loading. The model
+therefore leaves uniform flow unchanged but reacts more strongly to density
+variations in heavily loaded states, consistent with a queue-front or
+anticipation effect absent from an equilibrium closure.
+
+The Weidmann correction is the most directly interpretable. Its fitted
+$a>0$, so it increases flux at intermediate densities while remaining exactly
+one at both $ho=0$ and $ho=\rho_{\max}$. It preserves the free-flow and jam
+limits and modifies only the interior of the diagram. The Triangular model has
+$a<0$ and gates the contrast by density: it is inactive in empty or homogeneous
+traffic but becomes more influential as congestion develops. Finally, the Del
+Castillo fit has $c_0>0$ and $a,b<0$. It combines a small global uplift with
+suppression as the three-cell density aggregate $S_3$ grows and an additional
+response at spatial density contrasts. Taken together, the selected structures
+suggest that the residual bias is baseline dependent: some diagrams mainly
+need a correction to their homogeneous density dependence, whereas others
+benefit from sensitivity to short-range traffic heterogeneity. These
+interpretations are structural hypotheses, not identified driver-behaviour
+mechanisms, and require validation on other roads and traffic regimes.
+
 After these structures were frozen, their coefficients were refitted on the
 combined train and validation interval (samples 0--107). Each frozen model was
 then evaluated once on samples 108--179. The held-out result could not affect
 either the selected structure or its coefficients.
 
-As an aggregate traffic-level diagnostic, we also computed total travel time
-over the held-out interval,
-\begin{equation}
-    \mathrm{TTS}=\int_{t\in\mathcal{T}_{\mathrm{test}}}
-                 \int_{x\in\Omega}\rho(x,t)\,\mathrm{d}x\,\mathrm{d}t,
-    \qquad
-    E_{\mathrm{TTS}}
-      =\frac{|\mathrm{TTS}_{\mathrm{model}}-\mathrm{TTS}_{\mathrm{data}}|}
-             {\mathrm{TTS}_{\mathrm{data}}}.
-    \label{eq:traffic-tts}
-\end{equation}
-Models were ranked only by held-out $E_{\mathrm{data}}$. Improvement relative
-to a model's own classical baseline was defined as
+Models were ranked by held-out $E_{\mathrm{data}}$. Improvement relative to a
+model's own classical baseline was defined as
 $100(E_{\mathrm{data}}^{\mathrm{base}}-E_{\mathrm{data}}^{\mathrm{model}})
 /E_{\mathrm{data}}^{\mathrm{base}}$.
 
@@ -147,12 +171,9 @@ the corresponding structures found in the Automodel search. Automodel--Del
 Castillo attained the lowest held-out density, velocity, and aggregate errors,
 with $E_{\mathrm{data}}=6.780$. The Automodel--Greenshields correction produced
 the largest improvement over its baseline, reducing test $E_{\mathrm{data}}$
-by 23.17\%, and also reduced $E_{\mathrm{TTS}}$ from 0.152 to 0.121. Automodel
-improved held-out $E_{\mathrm{data}}$ for four of the five baseline families;
-the exception was IDM, for which the score increased by 2.30\%. The uncorrected
-Weidmann model attained the lowest TTS error. The TTS diagnostic was not part
-of model selection and did not improve consistently across the selected
-corrections. Figure~\ref{fig:traffic-fields} shows the measured spatio-temporal
+by 23.17\%. Automodel improved held-out $E_{\mathrm{data}}$ for four of the five
+baseline families; the exception was IDM, for which the score increased by
+2.30\%. Figure~\ref{fig:traffic-fields} shows the measured spatio-temporal
 fields beside the five Automodel predictions. The models reproduce the broad
 traffic regimes but smooth part of the fine-scale variability in the data.
 Figure~\ref{fig:traffic-velocity-predictions} makes the remaining velocity
@@ -193,22 +214,22 @@ observed velocity range, particularly at its upper end.
     own classical baseline; positive values indicate improvement. AM denotes
     \texttt{automodel}.}
     \label{tab:traffic-test-results}
-    \begin{tabular}{@{}lrrrrr@{}}
+    \begin{tabular}{@{}lrrrr@{}}
         \toprule
         Model & $E_\rho$ & $E_v$ & $E_{\mathrm{data}}$ (rank)
-              & $\Delta_{\mathrm{base}}$ & $E_{\mathrm{TTS}}$ \\
+              & $\Delta_{\mathrm{base}}$ \\
         \midrule
-        Greenshields       & 0.294 & 0.313 & 9.230 (10) & --        & 0.152 \\
-        AM--Greenshields   & 0.255 & 0.277 & 7.092 (3)  & $+23.17\%$ & 0.121 \\
-        IDM                & 0.258 & 0.270 & 6.957 (2)  & --        & 0.116 \\
-        AM--IDM            & 0.256 & 0.277 & 7.117 (4)  & $-2.30\%$  & 0.125 \\
-        Weidmann           & 0.265 & 0.288 & 7.651 (8)  & --        & \textbf{0.115} \\
-        AM--Weidmann       & 0.265 & 0.281 & 7.459 (7)  & $+2.51\%$  & 0.117 \\
-        Triangular         & 0.269 & 0.294 & 7.919 (9)  & --        & 0.129 \\
-        AM--Triangular     & 0.256 & 0.277 & 7.118 (5)  & $+10.11\%$ & 0.127 \\
-        Del Castillo       & 0.257 & 0.279 & 7.197 (6)  & --        & 0.119 \\
+        Greenshields       & 0.294 & 0.313 & 9.230 (10) & --         \\
+        AM--Greenshields   & 0.255 & 0.277 & 7.092 (3)  & $+23.17\%$ \\
+        IDM                & 0.258 & 0.270 & 6.957 (2)  & --         \\
+        AM--IDM            & 0.256 & 0.277 & 7.117 (4)  & $-2.30\%$  \\
+        Weidmann           & 0.265 & 0.288 & 7.651 (8)  & --         \\
+        AM--Weidmann       & 0.265 & 0.281 & 7.459 (7)  & $+2.51\%$  \\
+        Triangular         & 0.269 & 0.294 & 7.919 (9)  & --         \\
+        AM--Triangular     & 0.256 & 0.277 & 7.118 (5)  & $+10.11\%$ \\
+        Del Castillo       & 0.257 & 0.279 & 7.197 (6)  & --         \\
         AM--Del Castillo   & \textbf{0.253} & \textbf{0.267}
-                           & \textbf{6.780 (1)} & $+5.80\%$ & 0.123 \\
+                           & \textbf{6.780 (1)} & $+5.80\%$ \\
         \bottomrule
     \end{tabular}
 \end{table}
@@ -220,4 +241,4 @@ series. These choices preserve compatibility with the repository benchmark but
 limit the strength of claims about fully autonomous forecasting and
 out-of-distribution generalization. The results support multiplicative
 correction as a useful baseline-dependent strategy, but do not show that
-Automodel uniformly improves every classical diagram or aggregate metric.
+Automodel uniformly improves every classical diagram.

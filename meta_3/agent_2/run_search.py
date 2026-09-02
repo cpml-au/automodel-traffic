@@ -16,7 +16,7 @@ from deap import gp
 from automodel.model import BASELINES
 from automodel.pipeline import I80PredictionEvaluator
 from automodel.search_utils import fit_candidate, is_nonlocal_feasible
-from tests.test_sr_primitives import build_traffic_pset
+from automodel.typed_primitives import build_traffic_pset
 
 
 ROOT = Path(__file__).resolve().parent

@@ -17,8 +17,8 @@ from scipy.optimize import minimize_scalar
 
 from automodel.model import BASELINES, Baseline, constant_multiplier
 from sr_traffic.data.data import build_dataset, preprocess_data
-from sr_traffic.sr.utils import solve
 from sr_traffic.utils.flat import define_flats
+from sr_traffic.utils.simulation import solve_correction
 
 
 @dataclass(frozen=True)
@@ -116,14 +116,9 @@ class I80PredictionEvaluator:
         def compiled_correction(rho, constants):
             return correction(rho, constants)
 
-        ansatz = {
-            "flux": baseline.flux,
-            "v": baseline.velocity,
-            "opt_coeffs": baseline.coefficients,
-        }
         num_solver_times = int(X[-1, 0] * self.data["step"] + 1)
         start = time.perf_counter()
-        total_error, fields = solve(
+        total_error, fields = solve_correction(
             compiled_correction,
             tuple(parameters),
             X,
@@ -134,7 +129,8 @@ class I80PredictionEvaluator:
             self.data["delta_t_refined"],
             self.data["step"],
             self.flats,
-            ansatz,
+            baseline.flux,
+            baseline.coefficients,
             "prediction",
         )
         total_error.block_until_ready()

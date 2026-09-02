@@ -23,8 +23,8 @@ from automodel.search_utils import (
     is_nonlocal_feasible,
     physical_density_limit,
 )
+from automodel.typed_primitives import build_traffic_pset
 from meta_4.agent_2 import common
-from tests.test_sr_primitives import build_traffic_pset
 
 
 ROOT = Path(__file__).resolve().parent

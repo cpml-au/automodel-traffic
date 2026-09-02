@@ -2,7 +2,6 @@ from dctkit.dec import cochain as C
 from sr_traffic.data.data import preprocess_data, build_dataset
 import sr_traffic.fd.diagrams as tf_utils
 from sr_traffic.utils.godunov import godunov_solver
-from sr_traffic.sr.utils import resolve_function
 import jax.numpy as jnp
 from jax import vmap
 import pygmo as pg
@@ -164,7 +163,7 @@ if __name__ == "__main__":
         "linear_left_v": flat_left,
     }
 
-    flux = resolve_function(config_file_data["flux"])
+    flux = getattr(tf_utils, config_file_data["flux"])
     flux_der = tf_utils.define_flux_der(S, flux)
 
     if task == "prediction":
