@@ -1,4 +1,4 @@
-"""Regression tests for the typed SR-Traffic DEC primitive grammar."""
+"""Regression tests for the typed DEC primitive grammar used by Automodel."""
 
 from pathlib import Path
 

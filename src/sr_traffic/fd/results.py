@@ -627,7 +627,7 @@ def save_score_tables(
         )
 
     caption = (
-        "Unpenalized SR data error on the training and test partitions for "
+        "Unpenalized data error on the training and test partitions for "
         f"the {road_name} {task} task. Lower is better."
     )
     markdown = "\n".join(

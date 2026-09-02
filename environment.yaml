@@ -1,4 +1,4 @@
-name: sr_traffic
+name: automodel-traffic
 channels:
   - conda-forge
   - defaults
