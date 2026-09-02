@@ -63,9 +63,6 @@ def body_fun(
     t: float,
 ):
     rho_t, check = rho_t_check
-    rho_tp1 = update_rho(S, flux, flux_der, delta_t, k, rho_t, flats)
-    rho_tp1 = rho_tp1.at[0].set(rho[0, t + 1])
-    rho_tp1 = rho_tp1.at[-3:].set(rho[-3:, t + 1].reshape(-1, 1))
 
     def compute_step(rho_t):
         rho_tp1 = update_rho(S, flux, flux_der, delta_t, k, rho_t, flats)
@@ -80,8 +77,6 @@ def body_fun(
     rho_tp1_check = lax.cond(
         check, lambda _: skip_step(rho_t), lambda _: compute_step(rho_t), operand=None
     )
-
-    # rho_tp1_check = (rho_tp1, check)
 
     # to compute velocity, first interpolate rho_tp1
     rho_tp1_P0 = C.star(flats["linear_left"](C.CochainD0(S, rho_tp1_check[0])))

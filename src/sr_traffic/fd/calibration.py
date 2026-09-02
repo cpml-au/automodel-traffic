@@ -39,7 +39,6 @@ class Calibration:
         S: SimplicialComplex,
         rho: npt.NDArray,
         v: npt.NDArray,
-        f: npt.NDArray,
         rho_god: npt.NDArray,
         num_t_points: int,
         delta_t_refined: float,
@@ -54,7 +53,6 @@ class Calibration:
         self.S = S
         self.rho = rho
         self.v = v
-        self.f = f
         self.rho_god = rho_god
         self.num_t_points = num_t_points
         self.delta_t_refined = delta_t_refined
@@ -72,13 +70,13 @@ class Calibration:
         flux_der = lambda x: self.flux_der(x, *flux_cal_params)
         rho_computed, v_computed, f_computed = godunov_solver(
             self.rho_god[:, 0],
-            S,
+            self.S,
             self.rho_god,
             flux,
             flux_der,
             self.delta_t_refined,
             0.0,
-            flats,
+            self.flats,
             num_t_points,
         )
 
@@ -96,7 +94,6 @@ class Calibration:
             num_t_points = int(self.train_idx[-1] * self.step + 1)
         elif self.task == "reconstruction":
             num_t_points = self.num_t_points
-        # num_t_points = int(self.train_idx[-1] + 1)
         total_error = self.error(flux_cal_params, num_t_points)[0]
         if jnp.isnan(total_error) or total_error >= 1e3:
             total_error = 1e3
@@ -119,7 +116,7 @@ if __name__ == "__main__":
 
     task = config_file_data["task"]
     data_info = preprocess_data(config_file_data["road_name"])
-    _, _, X_training, X_test = build_dataset(
+    _, _, X_training, _ = build_dataset(
         data_info["t_sampled_circ"],
         data_info["S"],
         data_info["density"],
@@ -156,10 +153,6 @@ if __name__ == "__main__":
         interp_func=I_linear_right,
         interp_func_args={"sigma": zeros},
     )
-    W_parabolic_P_T = tf_flat.get_parabolic_weights(S.num_nodes, True)
-    primal_edges = C.CochainP1(S, S.primal_edges_vectors)
-    flat_parabolic_P = partial(flat, weights=W_parabolic_P_T.T, edges=primal_edges)
-
     def flat_left_wrap(x):
         return flat_linear_left_D(C.CochainD0(S, x)).coeffs
 
@@ -176,18 +169,14 @@ if __name__ == "__main__":
 
     if task == "prediction":
         train_idx = jnp.arange(X_training[0, 0], X_training[-1, 0] + 1, dtype=jnp.int64)
-        test_idx = jnp.arange(X_test[0, 0], X_test[-1, 0] + 1, dtype=jnp.int64)
     elif task == "reconstruction":
         num_tr = int(X_training.shape[0] / len(data_info["t_sampled_circ"]))
-        num_test = int(X_test.shape[0] / len(data_info["t_sampled_circ"]))
         train_idx = X_training[:num_tr, 0].astype(jnp.int64)
-        test_idx = X_test[:num_test, 0].astype(jnp.int64)
 
     calib = Calibration(
         S,
         X_training[:, 1],
         X_training[:, 2],
-        X_training[:, 3],
         rho_godunov,
         data_info["num_t_points"],
         data_info["delta_t_refined"],

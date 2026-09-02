@@ -71,25 +71,3 @@ def constant_multiplier(
     (scale,) = parameters
     return C.CochainP0(rho.complex, scale * jnp.ones_like(rho.coeffs))
 
-
-def identity_multiplier(
-    rho: C.CochainP0, parameters: Sequence[float] = ()
-) -> C.CochainP0:
-    """Return ``g(rho) = 1`` for an uncorrected baseline evaluation."""
-
-    del parameters
-    return C.CochainP0(rho.complex, jnp.ones_like(rho.coeffs))
-
-
-def corrected_flux(
-    rho: C.CochainP0,
-    baseline: Baseline,
-    correction: Callable,
-    correction_parameters: Sequence[float],
-) -> C.CochainP0:
-    """Evaluate ``q_baseline(rho) * g(rho)`` using DEC cochain multiplication."""
-
-    base = baseline.flux(rho, *baseline.coefficients)
-    multiplier = correction(rho, correction_parameters)
-    return C.cochain_mul(base, multiplier)
-

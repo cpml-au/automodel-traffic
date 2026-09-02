@@ -11,7 +11,7 @@ import sys
 import time
 from dataclasses import asdict
 from pathlib import Path
-from typing import Callable, Sequence
+from typing import Sequence
 
 import jax.numpy as jnp
 import numpy as np

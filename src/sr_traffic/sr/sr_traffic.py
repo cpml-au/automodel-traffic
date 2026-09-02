@@ -454,8 +454,6 @@ if __name__ == "__main__":
     regressor_params, config_file_data = util.load_config_data(filename)
     road_name = config_file_data["gp"]["road_name"]
     task = config_file_data["gp"]["task"]
-    set_seed = config_file_data["gp"]["set_seed"]
-
     data_info = preprocess_data(road_name)
     X_tr, X_val, X_tr_val, X_test = build_dataset(
         data_info["t_sampled_circ"],

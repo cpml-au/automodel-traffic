@@ -16,24 +16,6 @@ def Greenshields_flux(rho: C.Cochain, v_max: float, rho_max: float):
     )
 
 
-def Greenberg_flux(rho: C.Cochain, v_max: float, rho_max: float):
-    return C.Cochain(
-        rho.dim,
-        rho.is_primal,
-        rho.complex,
-        v_max * rho.coeffs * jnp.log(rho_max / rho.coeffs),
-    )
-
-
-def Underwood_flux(rho: C.Cochain, v_max: float, rho_max: float):
-    return C.Cochain(
-        rho.dim,
-        rho.is_primal,
-        rho.complex,
-        v_max * rho.coeffs * jnp.exp(-rho.coeffs / rho_max),
-    )
-
-
 def Weidmann_flux(rho: C.Cochain, v_max: float, rho_max: float, lambda_w: float):
     return C.Cochain(
         rho.dim,
@@ -60,10 +42,6 @@ def Greenshields_v(rho: npt.NDArray, v_max: float, rho_max: float):
     return v_max * (1 - rho / rho_max)
 
 
-def Underwood_v(rho: npt.NDArray, v_max: float, rho_max: float):
-    return v_max * jnp.exp(-rho / rho_max)
-
-
 def Weidmann_v(rho: npt.NDArray, v_max: float, rho_max: float, lambda_w: float):
     return v_max * (1 - jnp.exp(-lambda_w * (1 / rho - 1 / rho_max)))
 
@@ -77,10 +55,6 @@ def triangular_v(rho: npt.NDArray, V_0: float, l_eff: float, T: float):
     )
     v_coeffs = jnp.where(free_traffic_idx, V_0, flux_interm)
     return v_coeffs
-
-
-def IDM_fn(v: npt.NDArray, s0: float, T: float, delta: float, v0: float):
-    return (s0 + v * T) / jnp.sqrt(1 - (v / v0) ** delta)
 
 
 def IDM_eq(
@@ -325,21 +299,6 @@ def del_castillo_corrected_flux(
         (C_jam, V_max, rho_max, theta),
         del_castillo_correction_multiplier(rho, c0, a, b),
     )
-
-
-def multiplicatively_corrected_flux(
-    rho: C.Cochain,
-    baseline_flux: Callable,
-    baseline_coefficients: npt.NDArray,
-    correction: Callable,
-    flat_downwind: Callable,
-    correction_coefficients: npt.NDArray,
-):
-    """Apply a fitted DEC correction to any basic fundamental diagram."""
-
-    baseline = baseline_flux(rho, *baseline_coefficients)
-    multiplier = correction(rho, flat_downwind, *correction_coefficients)
-    return C.cochain_mul(baseline, multiplier)
 
 
 def define_flux_der(S: SimplicialComplex, flux: Callable):

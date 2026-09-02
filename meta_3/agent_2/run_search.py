@@ -11,7 +11,6 @@ import sys
 import time
 from pathlib import Path
 
-import jax.numpy as jnp
 from deap import gp
 
 from automodel.model import BASELINES
@@ -50,7 +49,7 @@ def load_model(attempt: int):
 def validate_grammar(models: list[object]) -> list[str]:
     """Verify repaired Hodge names and exact typed structures in the live grammar."""
 
-    pset, complex_ = build_traffic_pset()
+    pset, _ = build_traffic_pset()
     pset.addTerminal(0.0, float, "a")
     pset.addTerminal(0.0, float, "b")
     registered = [
@@ -68,7 +67,6 @@ def validate_grammar(models: list[object]) -> list[str]:
                 f"grammar compiled {len(tree)}"
             )
         gp.compile(tree, pset)
-    del complex_  # Numerical evaluation is covered by the regression smoke test.
     return registered
 
 

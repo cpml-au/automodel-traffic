@@ -7,14 +7,16 @@ from dctkit import config
 from sr_traffic.data.data import preprocess_data, build_dataset
 from sr_traffic.fd import diagrams as tf_utils
 from sr_traffic.utils import flat as tf_flat
-from sr_traffic.sr.primitives import *
 from sr_traffic.utils.godunov import godunov_solver
+from sr_traffic.utils.metrics import relative_tts_error
+from dctkit.mesh.simplex import SimplicialComplex
 from functools import partial
 import matplotlib.pyplot as plt
 import matplotlib.colors as mcolors
 import matplotlib.patches as patches
 import numpy.typing as npt
-from typing import Dict, List, Callable
+from scipy.stats import rankdata
+from typing import Dict, Callable
 import argparse
 from pathlib import Path
 
@@ -58,17 +60,6 @@ def compute_errors(
     v_err = jnp.sqrt(jnp.sum((true_v - model_v) ** 2)) / jnp.sqrt(jnp.sum(true_v**2))
     f_err = jnp.sqrt(jnp.sum((true_f - model_f) ** 2)) / jnp.sqrt(jnp.sum(true_f**2))
     return rho_err, v_err, f_err
-
-
-def compute_tts_error(
-    true_rho: npt.NDArray,
-    model_rho: npt.NDArray,
-    t_vec: npt.NDArray,
-    x_vec: npt.NDArray,
-):
-    tts_true = np.trapezoid(np.trapezoid(true_rho, t_vec, axis=1), x_vec, axis=0)
-    tts_model = np.trapezoid(np.trapezoid(model_rho, t_vec, axis=1), x_vec, axis=0)
-    return np.abs((tts_model - tts_true) / tts_true)
 
 
 def simulate_model(
@@ -167,9 +158,7 @@ def plot_diagrams(
         )
         axes[i].set_xlabel(r"$\rho$ (veh/ft)")
         axes[i].set_ylabel(r"$\rho\,V(\rho)$ (veh/s)")
-        # axes[i].set_xticks([0, 0.1, 0.2])
         axes[i].set_yticks([0, 1, 2, 3])
-        # axes[i].legend()
         axes[i].set_title(model_plot_title(name))
 
     handles, labels = axes[i].get_legend_handles_labels()
@@ -240,7 +229,6 @@ def rho_v_plot(
         rect_train = [rect_0_train, rect_1_train]
         rect_test = [rect_0_test, rect_1_test]
     elif task == "reconstruction":
-        # x_idx = x_sampled_circ[train_idx][:-4]
         if road_name == "I80":
             x_idx = [
                 50.0,
@@ -351,7 +339,6 @@ def rho_v_plot(
     for j in range(num_models + 1):
         axes[-1, j].set_xticks(x_ticks)
 
-    # plt.tight_layout(rect=[0, 0, 0.85, 0.95])
     plt.savefig(
         RESULTS_DIR / f"rho_v_f_plot_{test_name}.png",
         dpi=300,
@@ -384,8 +371,6 @@ def predicted_true_plots(results: Dict, v: npt.NDArray, f: npt.NDArray, test_nam
         axes[i].set_xlabel(r"Flux true")
         axes[i].set_ylabel(r"Flux predicted")
         axes[i].set_title(model_plot_title(models_names[i]))
-        # axes[i].set_xlim(0, 25)
-        # axes[i].set_ylim(0, 25)
     plt.tight_layout()
     plt.savefig(
         RESULTS_DIR / f"pred_actual_flux_{test_name}.png",
@@ -415,8 +400,6 @@ def predicted_true_plots(results: Dict, v: npt.NDArray, f: npt.NDArray, test_nam
         axes[i].set_xlabel(r"Velocity true")
         axes[i].set_ylabel(r"Velocity predicted")
         axes[i].set_title(model_plot_title(models_names[i]))
-        # axes[i].set_xlim(0, 25)
-        # axes[i].set_ylim(0, 25)
     plt.tight_layout()
     plt.savefig(
         RESULTS_DIR / f"pred_actual_velocity_{test_name}.png",
@@ -428,97 +411,120 @@ def predicted_true_plots(results: Dict, v: npt.NDArray, f: npt.NDArray, test_nam
 
 # Highlight best values
 def format_entry(val: float, rank: float, is_best: bool):
-    formatted = f"{val:.3f} ({rank})"
+    formatted = f"{val:.3f} ({rank:g})"
     return f"\\textbf{{{formatted}}}" if is_best else formatted
 
 
 def format_markdown_entry(val: float, rank: float, is_best: bool):
-    formatted = f"{val:.3f} ({rank})"
+    formatted = f"{val:.3f} ({rank:g})"
     return f"**{formatted}**" if is_best else formatted
 
 
 def save_error_tables(
     results: Dict,
-    train_idx: npt.NDArray,
     test_idx: npt.NDArray,
     road_name: str,
     task: str,
+    t_vec: npt.NDArray,
+    x_vec: npt.NDArray,
     output_path: Path,
+    reference_results: Dict | None = None,
 ):
-    t_errors = []
+    """Save held-out errors, test-score ranks, baseline gains, and TTS errors."""
+
     if task == "prediction":
-        train_idx_slice = (slice(None), train_idx)
-        test_idx_slice = (slice(None), test_idx)
+        test_slice = (slice(1, -3), test_idx)
+        tts_slice = (slice(None), test_idx)
+        tts_t = t_vec[test_idx]
+        tts_x = x_vec
     elif task == "reconstruction":
-        train_idx_slice = (train_idx, slice(None))
-        test_idx_slice = (test_idx, slice(None))
-    for name, model in results.items():
-        # training errors
-        e_rho_train, e_v_train, _ = compute_errors(
-            data_info["density"][train_idx_slice],
-            v[train_idx_slice],
-            f[train_idx_slice],
-            model["rho"][train_idx_slice],
-            model["v"][train_idx_slice],
-            model["f"][train_idx_slice],
-        )
-        # test errors
+        test_slice = (test_idx, slice(None))
+        tts_slice = test_slice
+        tts_t = t_vec
+        tts_x = x_vec[test_idx]
+    else:
+        raise ValueError(f"Unsupported task: {task}")
+
+    models_for_metrics = dict(reference_results or {}) | results
+    metrics = {}
+    for name, model in models_for_metrics.items():
         e_rho_test, e_v_test, _ = compute_errors(
-            data_info["density"][test_idx_slice],
-            v[test_idx_slice],
-            f[test_idx_slice],
-            model["rho"][test_idx_slice],
-            model["v"][test_idx_slice],
-            model["f"][test_idx_slice],
+            data_info["density"][test_slice],
+            v[test_slice],
+            f[test_slice],
+            model["rho"][test_slice],
+            model["v"][test_slice],
+            model["f"][test_slice],
+        )
+        e_data_test = 50.0 * (e_rho_test**2 + e_v_test**2)
+        e_tts_test = relative_tts_error(
+            np.asarray(data_info["density"])[tts_slice],
+            np.asarray(model["rho"])[tts_slice],
+            np.asarray(tts_t),
+            np.asarray(tts_x),
+        )
+        metrics[name] = (
+            float(e_rho_test),
+            float(e_v_test),
+            float(e_data_test),
+            float(e_tts_test),
         )
 
-        # e_tts = compute_tts_error(
-        #     data_info["density"],
-        #     model["rho"],
-        #     data_info["t_sampled_circ"],
-        #     x_sampled_circ,
-        # )
-        t_errors.append((name, e_rho_train, e_v_train, e_rho_test, e_v_test))
+    def family_name(name: str) -> str:
+        for prefix in ("automodel-", "SR-"):
+            if name.startswith(prefix):
+                return name.removeprefix(prefix)
+        return name
 
-    # Compute ranks for each metric
-    error_arrays = np.array([[t[1], t[2], t[3], t[4]] for t in t_errors])
-    ranks = np.argsort(np.argsort(error_arrays, axis=0), axis=0) + 1
-    avg_ranks = np.mean(ranks, axis=1)
+    baseline_scores = {
+        name: values[2]
+        for name, values in metrics.items()
+        if family_name(name) == name
+    }
+    rows = [(name, *metrics[name]) for name in results]
+    ranks = rankdata([row[3] for row in rows], method="average")
+    best_rho = min(row[1] for row in rows)
+    best_v = min(row[2] for row in rows)
+    best_data = min(row[3] for row in rows)
+    best_tts = min(row[4] for row in rows)
 
-    latex_rows = []
     markdown_rows = []
-    for i, (name, e_rho_train, e_v_train, e_rho_test, e_v_test) in enumerate(t_errors):
-        latex_row = [
-            name,
-            format_entry(e_rho_train, ranks[i, 0], ranks[i, 0] == 1),
-            format_entry(e_v_train, ranks[i, 1], ranks[i, 1] == 1),
-            format_entry(e_rho_test, ranks[i, 2], ranks[i, 2] == 1),
-            format_entry(e_v_test, ranks[i, 3], ranks[i, 3] == 1),
-            (
-                f"\\textbf{{{avg_ranks[i]:.2f}}}"
-                if avg_ranks[i] == min(avg_ranks)
-                else f"{avg_ranks[i]:.2f}"
-            ),
-        ]
+    latex_rows = []
+    for i, (name, e_rho_test, e_v_test, e_data_test, e_tts_test) in enumerate(rows):
+        baseline_name = family_name(name)
+        if name == baseline_name:
+            improvement_markdown = "—"
+            improvement_latex = "--"
+        else:
+            improvement = 100.0 * (
+                baseline_scores[baseline_name] - e_data_test
+            ) / baseline_scores[baseline_name]
+            improvement_markdown = f"{improvement:+.2f}%"
+            improvement_latex = f"{improvement:+.2f}\\%"
+
         markdown_row = [
             name,
-            format_markdown_entry(e_rho_train, ranks[i, 0], ranks[i, 0] == 1),
-            format_markdown_entry(e_v_train, ranks[i, 1], ranks[i, 1] == 1),
-            format_markdown_entry(e_rho_test, ranks[i, 2], ranks[i, 2] == 1),
-            format_markdown_entry(e_v_test, ranks[i, 3], ranks[i, 3] == 1),
-            (
-                f"**{avg_ranks[i]:.2f}**"
-                if avg_ranks[i] == min(avg_ranks)
-                else f"{avg_ranks[i]:.2f}"
-            ),
+            f"**{e_rho_test:.3f}**" if e_rho_test == best_rho else f"{e_rho_test:.3f}",
+            f"**{e_v_test:.3f}**" if e_v_test == best_v else f"{e_v_test:.3f}",
+            format_markdown_entry(e_data_test, ranks[i], e_data_test == best_data),
+            improvement_markdown,
+            f"**{e_tts_test:.3f}**" if e_tts_test == best_tts else f"{e_tts_test:.3f}",
         ]
-        latex_rows.append(latex_row)
+        latex_row = [
+            name,
+            f"\\textbf{{{e_rho_test:.3f}}}" if e_rho_test == best_rho else f"{e_rho_test:.3f}",
+            f"\\textbf{{{e_v_test:.3f}}}" if e_v_test == best_v else f"{e_v_test:.3f}",
+            format_entry(e_data_test, ranks[i], e_data_test == best_data),
+            improvement_latex,
+            f"\\textbf{{{e_tts_test:.3f}}}" if e_tts_test == best_tts else f"{e_tts_test:.3f}",
+        ]
         markdown_rows.append(markdown_row)
+        latex_rows.append(latex_row)
 
     caption = (
-        "Relative errors between the actual and the computed density and velocity "
-        f"(training and test) for the {task} task. In bold, the best-performing "
-        "models for each metric considered."
+        "Held-out relative density, velocity, and total-travel-time errors for "
+        f"the {road_name} {task} task. Models are ranked only by test E_data; "
+        "positive improvement means lower E_data than the corresponding baseline."
     )
     label = f"tab:{output_path.stem}_{road_name.lower()}_{task}"
 
@@ -530,7 +536,7 @@ def save_error_tables(
         \begin{center}
             \begin{tabular}{c c c c c c}
                 \toprule
-                Model & $E^{\text{tr}}_\rho$ & $E^{\text{tr}}_v$ & $E^{\text{ts}}_\rho$ & $E^{\text{ts}}_v$ & Avg Rank\\
+                Model & $E^{\text{ts}}_\rho$ & $E^{\text{ts}}_v$ & $E^{\text{ts}}_{data}$ (rank) & vs. own baseline & $E^{\text{ts}}_{TTS}$\\
                 \midrule
     """
         + "\n".join(["            " + " & ".join(row) + r"\\" for row in latex_rows])
@@ -552,7 +558,7 @@ def save_error_tables(
             "",
             caption,
             "",
-            "| Model | $E^{\\mathrm{tr}}_\\rho$ | $E^{\\mathrm{tr}}_v$ | $E^{\\mathrm{ts}}_\\rho$ | $E^{\\mathrm{ts}}_v$ | Avg Rank |",
+            "| Model | $E^{\\mathrm{ts}}_\\rho$ | $E^{\\mathrm{ts}}_v$ | $E^{\\mathrm{ts}}_{data}$ (rank) | vs. own baseline | $E^{\\mathrm{ts}}_{TTS}$ |",
             "|---|---:|---:|---:|---:|---:|",
             *["| " + " | ".join(row) + " |" for row in markdown_rows],
             "",
@@ -684,9 +690,7 @@ _, _, X_training, X_test = build_dataset(
     task,
 )
 
-# plot data
 x_sampled_circ = (data_info["x_sampled"][1:] + data_info["x_sampled"][:-1]) / 2
-x_mesh, t_mesh = np.meshgrid(x_sampled_circ, data_info["t_sampled_circ"])
 S = data_info["S"]
 
 # define flat
@@ -715,9 +719,7 @@ all_flats = tf_flat.define_flats(S, zeros_P, zeros_D)
 
 flats = {
     "linear_left": all_flats["flat_linear_left_D"],
-    "linear_left_P": all_flats["flat_linear_left_P"],
     "linear_right": all_flats["flat_linear_right_D"],
-    "linear_right_P": all_flats["flat_linear_right_P"],
     "flat_left_v": flat_left,
 }
 
@@ -763,7 +765,6 @@ elif road_name == "I80":
     x_ticks = [0, 450, 900]
     y_ticks = [10, 760, 1510]
 
-num_x_points = len(x_sampled_circ)
 # set-up boundary conditions in an array
 rho_bnd_array = jnp.zeros((len(data_info["rho_bnd"].keys()), data_info["num_t_points"]))
 for index in data_info["rho_bnd"].keys():
@@ -899,7 +900,6 @@ data_info["t_sampled_circ"] *= data_info["t_len"]
 
 
 # plot params
-width = 443.57848
 fontsize = 15
 plt.rcParams["font.size"] = fontsize
 plt.rcParams["font.sans-serif"] = "Dejavu Sans"
@@ -966,13 +966,15 @@ if automodel_results:
 
 
 # Save the error tables
-results = results | automodel_results
+baseline_results = results
+results = baseline_results | automodel_results
 save_error_tables(
     results,
-    train_idx,
     test_idx,
     road_name,
     task,
+    data_info["t_sampled_circ"],
+    x_sampled_circ,
     RESULTS_DIR / "error_table.tex",
 )
 save_score_tables(
@@ -986,11 +988,13 @@ save_score_tables(
 if automodel_results:
     save_error_tables(
         automodel_results,
-        train_idx,
         test_idx,
         road_name,
         task,
+        data_info["t_sampled_circ"],
+        x_sampled_circ,
         RESULTS_DIR / "automodel_error_table.tex",
+        reference_results=baseline_results,
     )
     save_score_tables(
         automodel_results,

@@ -12,6 +12,7 @@ import importlib
 from typing import Callable, Dict, Tuple, List
 from functools import partial
 from sr_traffic.utils.godunov import body_fun, main_loop
+from sr_traffic.utils.metrics import relative_tts_error
 import numpy.typing as npt
 
 
@@ -181,16 +182,12 @@ def solve(
 
     rho = X[:, 1]
     v = X[:, 2]
-    # f = t_rho_v_f.y["f"]
 
     def individual(x):
         return func(x, consts)
 
     rho_norm = jnp.sum(rho**2)
     v_norm = jnp.sum(v**2)
-    # f_norm = jnp.sum(f**2)
-
-    # num_t_points = int(t_idx[-1] * step + 1)
 
     # init rho and define flux and update_rho fncs
     flux, single_iteration = init_prb(
@@ -352,19 +349,9 @@ def sr_traffic_plots(
         jnp.sum(jnp.square(f))
     )
 
-    # tts
-    tts_data = np.trapezoid(
-        np.trapezoid(density, t_sampled_circ, axis=1),
-        x_sampled_circ.flatten(),
-        axis=0,
+    error_tts = relative_tts_error(
+        density, rho_comp, t_sampled_circ, x_sampled_circ.flatten()
     )
-    tts = np.trapezoid(
-        np.trapezoid(rho_comp, t_sampled_circ, axis=1),
-        x_sampled_circ.flatten(),
-        axis=0,
-    )
-
-    error_tts = np.abs((tts - tts_data) / tts_data)
 
     print(
         "Full-field relative errors:"
@@ -429,7 +416,7 @@ def sr_traffic_plots(
         t_mesh, x_mesh, density[1:-3].T, levels=100, cmap=cmap, norm=norm
     )
     axes[0, 0].set_title("Data")
-    rho_computed_plot = axes[0, 1].contourf(
+    axes[0, 1].contourf(
         t_mesh, x_mesh, rho_comp[1:-3].T, levels=100, cmap=cmap, norm=norm
     )
     axes[0, 1].set_title("SR-Traffic")
@@ -443,16 +430,13 @@ def sr_traffic_plots(
     vmin = np.min(v.T)
     vmax = np.max(v.T)
 
-    # v_comp = v_comp.at[v_comp > vmax].set(vmax)
-    # v_comp = v_comp.at[v_comp < vmin].set(vmin)
-
     norm = mcolors.Normalize(vmin=vmin, vmax=vmax)
 
     # plot v
     v_plot = axes[1, 0].contourf(
         t_mesh, x_mesh, v[1:-3].T, levels=100, cmap=cmap, norm=norm
     )
-    v_computed_plot = axes[1, 1].contourf(
+    axes[1, 1].contourf(
         t_mesh, x_mesh, v_comp[1:-3].T, levels=100, cmap=cmap, norm=norm
     )
     plt.colorbar(v_plot, ax=axes[1, 1], label=r"$v$")
@@ -463,15 +447,12 @@ def sr_traffic_plots(
     vmin = np.min(f.T)
     vmax = np.max(f.T)
 
-    # f_comp = f_comp.at[f_comp > vmax].set(vmax)
-    # f_comp = f_comp.at[f_comp < vmin].set(vmin)
-
     norm = mcolors.Normalize(vmin=vmin, vmax=vmax)
 
     f_plot = axes[2, 0].contourf(
         t_mesh, x_mesh, f[1:-3].T, levels=100, cmap=cmap, norm=norm
     )
-    f_computed_plot = axes[2, 1].contourf(
+    axes[2, 1].contourf(
         t_mesh, x_mesh, f_comp[1:-3].T, levels=100, cmap=cmap, norm=norm
     )
     plt.colorbar(f_plot, ax=axes[2, 1], label=r"$f$")
