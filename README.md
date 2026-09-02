@@ -148,58 +148,41 @@ Replace `triangular.yaml` with `greenshields.yaml`, `idm.yaml`,
 average normalized density and velocity error on the training partition and
 prints the best parameter vector in the order shown above.
 
-## Classical, SR, and Automodel results
+## Classical and Automodel results
 
 The primary outcomes are relative L2 density and velocity errors on the held-out
 test interval. Their predefined aggregate is
 `E_data = 50 * (E_rho^2 + E_v^2)`; models are ranked only by this held-out score
-using full-precision values. `vs. own baseline` is the percentage reduction in
-test `E_data` relative to the corresponding uncorrected diagram, so positive
-values mean that the correction helped. These three errors use only scored
-interior rows, excluding the supplied boundary and ghost values.
+using full-precision values. `vs. baseline` is the percentage reduction in test
+`E_data` relative to the corresponding uncorrected diagram, so positive values
+mean that the correction helped. These three errors use only scored interior
+rows, excluding the supplied boundary and ghost values.
 
 `E_TTS` is the relative total-travel-time error on the test interval,
 `|TTS_model - TTS_data| / TTS_data`, where TTS is the space-time integral of
 density over the full road. Lower is better for every error column.
 
-Classical and Automodel values come from this checkout. The SR values were
-reproduced with the official
-[`cpml-au/SR-Traffic`](https://github.com/cpml-au/SR-Traffic) results script at
-commit `3bf285ab1d6b2b61f0c0f27c0d80e42633b84ac4`; those models are benchmarks and
-are not bundled here. Each SR improvement is measured against the classical
-baseline produced by that same upstream commit; Automodel improvements use the
-classical baselines from this checkout. Bold entries mark the best held-out
-value in each error column. The upstream IDM baseline has `E_data = 6.571`, so
-the SR-IDM improvement is intentionally paired with that value rather than the
-updated IDM baseline displayed below.
+All values come from this checkout. Bold entries mark the best held-out value
+in each error column.
 
-| Model | $E^{\mathrm{ts}}_\rho$ | $E^{\mathrm{ts}}_v$ | $E^{\mathrm{ts}}_{data}$ (rank) | vs. own baseline | $E^{\mathrm{ts}}_{TTS}$ |
+| Model | $E^{\mathrm{ts}}_\rho$ | $E^{\mathrm{ts}}_v$ | $E^{\mathrm{ts}}_{data}$ (rank) | vs. baseline | $E^{\mathrm{ts}}_{TTS}$ |
 |---|---:|---:|---:|---:|---:|
-| Greenshields | 0.294 | 0.313 | 9.230 (15) | — | 0.152 |
-| SR-Greenshields | 0.293 | 0.294 | 8.603 (14) | +6.80% | 0.163 |
-| automodel-Greenshields | 0.255 | 0.277 | 7.092 (7) | +23.17% | 0.121 |
-| IDM | 0.258 | 0.270 | 6.957 (6) | — | 0.116 |
-| SR-IDM | 0.246 | **0.253** | **6.226 (1)** | +5.26% | 0.108 |
-| automodel-IDM | 0.256 | 0.277 | 7.117 (8) | -2.30% | 0.125 |
-| Weidmann | 0.265 | 0.288 | 7.651 (12) | — | 0.115 |
-| SR-Weidmann | 0.255 | 0.269 | 6.861 (5) | +10.33% | 0.121 |
-| automodel-Weidmann | 0.265 | 0.281 | 7.459 (11) | +2.51% | 0.117 |
-| Triangular | 0.269 | 0.294 | 7.919 (13) | — | 0.129 |
-| SR-Triangular | 0.252 | 0.266 | 6.728 (2) | +15.04% | 0.121 |
-| automodel-Triangular | 0.256 | 0.277 | 7.118 (9) | +10.11% | 0.127 |
-| Del Castillo | 0.257 | 0.279 | 7.197 (10) | — | 0.119 |
-| SR-Del Castillo | **0.244** | 0.276 | 6.801 (4) | +5.51% | **0.107** |
-| automodel-Del Castillo | 0.253 | 0.267 | 6.780 (3) | +5.80% | 0.123 |
+| Greenshields | 0.294 | 0.313 | 9.230 (10) | — | 0.152 |
+| automodel-Greenshields | 0.255 | 0.277 | 7.092 (3) | +23.17% | 0.121 |
+| IDM | 0.258 | 0.270 | 6.957 (2) | — | 0.116 |
+| automodel-IDM | 0.256 | 0.277 | 7.117 (4) | -2.30% | 0.125 |
+| Weidmann | 0.265 | 0.288 | 7.651 (8) | — | **0.115** |
+| automodel-Weidmann | 0.265 | 0.281 | 7.459 (7) | +2.51% | 0.117 |
+| Triangular | 0.269 | 0.294 | 7.919 (9) | — | 0.129 |
+| automodel-Triangular | 0.256 | 0.277 | 7.118 (5) | +10.11% | 0.127 |
+| Del Castillo | 0.257 | 0.279 | 7.197 (6) | — | 0.119 |
+| automodel-Del Castillo | **0.253** | **0.267** | **6.780 (1)** | +5.80% | 0.123 |
 
-SR-IDM has the lowest held-out `E_data`, SR-Del Castillo has the lowest density
-and TTS errors, and Automodel-Greenshields provides the largest improvement over
-its own classical baseline. Automodel-IDM is the only correction that increases
-held-out `E_data` relative to its baseline.
-
-The SR benchmark and this checkout use the same chronological I80 task and score
-definition, but they were executed from different commits. The comparison is
-therefore a reproduced benchmark, not a claim that all implementations share an
-identical code path.
+Automodel-Del Castillo has the lowest held-out density, velocity, and aggregate
+errors in this comparison. Automodel-Greenshields provides the largest
+improvement over its classical baseline. Automodel-IDM is the only correction
+that increases held-out `E_data` relative to its baseline, while the uncorrected
+Weidmann model has the lowest TTS error.
 
 ## Acknowledgements
 

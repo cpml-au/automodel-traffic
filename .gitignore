@@ -49,6 +49,7 @@ venv.bak/
 # ignore
 *.png
 !readme_figure.png
+!paper/figures/*.png
 *.npy
 *.txt
 !src/sr_traffic/data/I80/*.txt

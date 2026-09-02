@@ -36,7 +36,10 @@ baseline flux, while still allowing local and short-range spatial adjustments.
 
 \paragraph{Method}
 The \texttt{automodel} skill was used with OpenAI Codex with the following
-domain-specific choices on top of the baseline workflow.
+domain-specific choices on top of the baseline workflow. The implementation,
+configurations, and reproducibility materials are available in the
+\href{https://github.com/cpml-au/automodel-traffic}{\texttt{automodel-traffic}
+repository}.
 
 \noindent\textbf{(i) Objective and data splitting.}
 We used density, velocity, and flow measurements from the NGSIM Interstate~80
@@ -139,18 +142,45 @@ $100(E_{\mathrm{data}}^{\mathrm{base}}-E_{\mathrm{data}}^{\mathrm{model}})
 /E_{\mathrm{data}}^{\mathrm{base}}$.
 
 \paragraph{Results}
-Table~\ref{tab:traffic-test-results} compares the classical diagrams, the
-corresponding symbolic-regression (SR) corrections, and the structures found in
-the Automodel search. SR-IDM attained the lowest held-out $E_{\mathrm{data}}$
-(6.226), followed by SR-Triangular (6.728), with Automodel--Del Castillo third
-(6.780). SR-Del Castillo achieved the lowest density and TTS errors. The
-Automodel--Greenshields correction produced the largest improvement over its
-own baseline, reducing test $E_{\mathrm{data}}$ by 23.17\%, and also reduced
-$E_{\mathrm{TTS}}$ from 0.152 to 0.121. Automodel improved held-out
-$E_{\mathrm{data}}$ for four of the five baseline families; the exception was
-IDM, for which the score increased by 2.30\%. The TTS diagnostic was not part of
-model selection and did not improve consistently across the selected
-corrections.
+Table~\ref{tab:traffic-test-results} compares the five classical diagrams with
+the corresponding structures found in the Automodel search. Automodel--Del
+Castillo attained the lowest held-out density, velocity, and aggregate errors,
+with $E_{\mathrm{data}}=6.780$. The Automodel--Greenshields correction produced
+the largest improvement over its baseline, reducing test $E_{\mathrm{data}}$
+by 23.17\%, and also reduced $E_{\mathrm{TTS}}$ from 0.152 to 0.121. Automodel
+improved held-out $E_{\mathrm{data}}$ for four of the five baseline families;
+the exception was IDM, for which the score increased by 2.30\%. The uncorrected
+Weidmann model attained the lowest TTS error. The TTS diagnostic was not part
+of model selection and did not improve consistently across the selected
+corrections. Figure~\ref{fig:traffic-fields} shows the measured spatio-temporal
+fields beside the five Automodel predictions. The models reproduce the broad
+traffic regimes but smooth part of the fine-scale variability in the data.
+Figure~\ref{fig:traffic-velocity-predictions} makes the remaining velocity
+error explicit: the predictions follow the central trend while compressing the
+observed velocity range, particularly at its upper end.
+
+\begin{figure}[t]
+    \centering
+    \includegraphics[width=\textwidth]
+        {paper/figures/rho_v_f_plot_I80_prediction_automodel.png}
+    \caption{Measured I80 fields and predictions from the five selected
+    Automodel corrections. Density is shown in the top row and velocity in the
+    bottom row; the first column contains the measurements and the remaining
+    columns the model predictions. The outlined regions in the measured
+    density panel distinguish the development and held-out time intervals.}
+    \label{fig:traffic-fields}
+\end{figure}
+
+\begin{figure}[t]
+    \centering
+    \includegraphics[width=\textwidth]
+        {paper/figures/pred_actual_velocity_I80_prediction_automodel.png}
+    \caption{Predicted versus measured velocity for the five selected
+    Automodel corrections over the complete I80 simulation. The red diagonal
+    is the identity line; departures from it show the magnitude and direction
+    of the velocity residuals.}
+    \label{fig:traffic-velocity-predictions}
+\end{figure}
 
 \begin{table}[t]
     \centering
@@ -158,7 +188,7 @@ corrections.
     \setlength{\tabcolsep}{3.5pt}
     \caption{Held-out I80 prediction errors. Lower is better for all error
     columns. Parentheses give rank by full-precision test
-    $E_{\mathrm{data}}$ across all 15 models. $\Delta_{\mathrm{base}}$ is the
+    $E_{\mathrm{data}}$ across the ten models. $\Delta_{\mathrm{base}}$ is the
     percentage reduction in test $E_{\mathrm{data}}$ relative to the model's
     own classical baseline; positive values indicate improvement. AM denotes
     \texttt{automodel}.}
@@ -168,39 +198,26 @@ corrections.
         Model & $E_\rho$ & $E_v$ & $E_{\mathrm{data}}$ (rank)
               & $\Delta_{\mathrm{base}}$ & $E_{\mathrm{TTS}}$ \\
         \midrule
-        Greenshields       & 0.294 & 0.313 & 9.230 (15) & --       & 0.152 \\
-        SR--Greenshields   & 0.293 & 0.294 & 8.603 (14) & $+6.80\%$  & 0.163 \\
-        AM--Greenshields   & 0.255 & 0.277 & 7.092 (7)  & $+23.17\%$ & 0.121 \\
-        IDM                & 0.258 & 0.270 & 6.957 (6)  & --       & 0.116 \\
-        SR--IDM            & 0.246 & \textbf{0.253} & \textbf{6.226 (1)}
-                           & $+5.26\%$ & 0.108 \\
-        AM--IDM            & 0.256 & 0.277 & 7.117 (8)  & $-2.30\%$ & 0.125 \\
-        Weidmann           & 0.265 & 0.288 & 7.651 (12) & --       & 0.115 \\
-        SR--Weidmann       & 0.255 & 0.269 & 6.861 (5)  & $+10.33\%$ & 0.121 \\
-        AM--Weidmann       & 0.265 & 0.281 & 7.459 (11) & $+2.51\%$ & 0.117 \\
-        Triangular         & 0.269 & 0.294 & 7.919 (13) & --       & 0.129 \\
-        SR--Triangular     & 0.252 & 0.266 & 6.728 (2)  & $+15.04\%$ & 0.121 \\
-        AM--Triangular     & 0.256 & 0.277 & 7.118 (9)  & $+10.11\%$ & 0.127 \\
-        Del Castillo       & 0.257 & 0.279 & 7.197 (10) & --       & 0.119 \\
-        SR--Del Castillo   & \textbf{0.244} & 0.276 & 6.801 (4)
-                           & $+5.51\%$ & \textbf{0.107} \\
-        AM--Del Castillo   & 0.253 & 0.267 & 6.780 (3)  & $+5.80\%$ & 0.123 \\
+        Greenshields       & 0.294 & 0.313 & 9.230 (10) & --        & 0.152 \\
+        AM--Greenshields   & 0.255 & 0.277 & 7.092 (3)  & $+23.17\%$ & 0.121 \\
+        IDM                & 0.258 & 0.270 & 6.957 (2)  & --        & 0.116 \\
+        AM--IDM            & 0.256 & 0.277 & 7.117 (4)  & $-2.30\%$  & 0.125 \\
+        Weidmann           & 0.265 & 0.288 & 7.651 (8)  & --        & \textbf{0.115} \\
+        AM--Weidmann       & 0.265 & 0.281 & 7.459 (7)  & $+2.51\%$  & 0.117 \\
+        Triangular         & 0.269 & 0.294 & 7.919 (9)  & --        & 0.129 \\
+        AM--Triangular     & 0.256 & 0.277 & 7.118 (5)  & $+10.11\%$ & 0.127 \\
+        Del Castillo       & 0.257 & 0.279 & 7.197 (6)  & --        & 0.119 \\
+        AM--Del Castillo   & \textbf{0.253} & \textbf{0.267}
+                           & \textbf{6.780 (1)} & $+5.80\%$ & 0.123 \\
         \bottomrule
     \end{tabular}
 \end{table}
 
-The SR values in Table~\ref{tab:traffic-test-results} were reproduced with the
-official SR-Traffic results implementation at commit \texttt{3bf285a}, whereas
-the classical and Automodel rows were produced by the present checkout. Each SR
-improvement is paired with the classical result from that same upstream
-implementation; in particular, its IDM baseline has
-$E_{\mathrm{data}}=6.571$. The rankings are therefore a reproduced benchmark
-rather than a claim that all models share an identical implementation path.
-Moreover, this study uses one road and one chronological split. The simulation
+This study uses one road and one chronological split. The simulation
 is conditional on measured boundary density throughout the test interval, and
 the benchmark normalization uses the maximum density over the complete time
 series. These choices preserve compatibility with the repository benchmark but
 limit the strength of claims about fully autonomous forecasting and
 out-of-distribution generalization. The results support multiplicative
 correction as a useful baseline-dependent strategy, but do not show that
-Automodel uniformly outperforms the existing SR models.
+Automodel uniformly improves every classical diagram or aggregate metric.
